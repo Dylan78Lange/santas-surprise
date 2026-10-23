@@ -19,7 +19,9 @@ RULES
 - 3 rounds.
 - Players take turns. Player 1 goes first in round 1, Player 2 in round 2,
   Player 1 in round 3.
-- Safe present: shows "You are safe!" plus a joke. The present goes away.
+- Safe present: shows "You are safe!". The present goes away.
+  Not every safe present shows a joke: each time, there is a random chance that
+  a joke is shown too (chance still to be decided, e.g. 50%).
 - Bomb opened: jump scare, and the OTHER player gets a point.
 - Only one present left in a normal round: it is the bomb. Both players get a
   point and nobody opens it.
@@ -40,7 +42,7 @@ Every present in a round uses the same image. Each round uses a new image:
 The jump scare picture is the red-eyed ghoul image Dylan shared in chat
 (not saved in this folder yet).
 
-JOKES (15, one per safe present, no repeats in a round)
+JOKES (15, shown on some safe presents at random)
 -------------------------------------------------------
 1. What do snowmen eat for breakfast? Frosted Flakes.
 2. Why did Santa go to music school? To improve his wrapping.
@@ -80,9 +82,9 @@ To play: double-click index.html.
 
 OPEN QUESTIONS
 --------------
-- Jokes: Dylan wrote "can you not do on all of the presents a joke" - need to
-  confirm whether that means "now" (every safe present shows a joke) or
-  something else.
+- Jokes: DECIDED - not every safe present shows a joke; each safe present has a
+  random chance of one. STILL NEEDED: the percentage chance (and whether a joke
+  can repeat in the same round).
 - 12 presents is an even number. Odd numbers split normal-round picks evenly
   (the last present is skipped); even numbers are fairer in sudden death. Dylan
   chose 12, so this is just something to watch when playtesting.
