@@ -1,0 +1,89 @@
+CHRISTMAS PRESENT GAME - NOTES
+==============================
+Made by Dylan. Claude helps only when asked and builds only what Dylan specifies.
+
+THE IDEA
+--------
+Two players take turns choosing presents. One present has a bomb. A safe present
+says "You are safe!" and shows a joke, then disappears. If you open the bomb you
+get a jump scare.
+
+CHARACTERS (chosen at the start)
+--------------------------------
+Santa Claus, an elf, a gingerbread man, a snowman, the Grinch.
+(Not decided yet: does the character do anything, or is it just a picture?)
+
+RULES
+-----
+- 12 presents in a normal round.
+- 3 rounds.
+- Players take turns. Player 1 goes first in round 1, Player 2 in round 2,
+  Player 1 in round 3.
+- Safe present: shows "You are safe!" plus a joke. The present goes away.
+- Bomb opened: jump scare, and the OTHER player gets a point.
+- Only one present left in a normal round: it is the bomb. Both players get a
+  point and nobody opens it.
+- After round 3 the higher score wins.
+- If the score is tied: SUDDEN DEATH round.
+  * It is a normal round (same presents, same jokes, new random bomb).
+  * A spin-the-wheel picks who goes first. The wheel is ONLY used here.
+  * The last present counts as a bomb, so whoever has to open it gets the scare
+    and the other player wins.
+
+PICTURES
+--------
+Every present in a round uses the same image. Each round uses a new image:
+  Round 1       present.jpeg   (red box, gold bow)
+  Round 2       present2.jpeg  (green box, bell)
+  Round 3       present3.jpeg  (purple snowflake box)
+  Sudden death  present4.jpeg  (round blue box, pink bow)
+The jump scare picture is the red-eyed ghoul image Dylan shared in chat
+(not saved in this folder yet).
+
+JOKES (15, one per safe present, no repeats in a round)
+-------------------------------------------------------
+1. What do snowmen eat for breakfast? Frosted Flakes.
+2. Why did Santa go to music school? To improve his wrapping.
+3. What do elves learn in school? The elf-abet.
+4. Why was the gingerbread man so sad? He felt crumby.
+5. What's a snowman's favorite place to dance? A snowball.
+6. Why did the Grinch bring a ladder? To go over the top.
+7. What do you call a snowman in July? A puddle.
+8. Why does Santa have three gardens? So he can ho, ho, ho.
+9. What do reindeer say before they tell a joke? This will sleigh you.
+10. How does a snowman get around? By icicle.
+11. What's Santa's favorite kind of pizza? One that's deep pan, crisp, and even.
+12. Why did the cookie go to the doctor? It was feeling crumbly.
+13. What do you get when you cross a snowman with a vampire? Frostbite.
+14. What's an elf's favorite music? Wrap.
+15. Why couldn't the gingerbread man be a secret agent? He kept getting spotted by the milk.
+
+BUILD ORDER
+-----------
+1. Row of present buttons ............ DONE (4x3 grid, 12 presents)
+2. Random bomb + "You are safe!" joke .. NOT STARTED
+3. Turns and points
+4. 3 rounds, then sudden death on a tie
+5. Character select
+6. Jump scare (picture + loud sound; sound must start after a click, browsers
+   block audio before that)
+7. Spin-the-wheel for sudden death (build last)
+
+FILES
+-----
+index.html  - the page
+style.css   - dark background, 4-column grid
+game.js     - makes the present buttons; `round` picks the image,
+              showPresents() redraws them
+present*.jpeg - the four present pictures (about 1.5-1.9 MB each)
+To play: double-click index.html.
+
+OPEN QUESTIONS
+--------------
+- Jokes: Dylan wrote "can you not do on all of the presents a joke" - need to
+  confirm whether that means "now" (every safe present shows a joke) or
+  something else.
+- 12 presents is an even number. Odd numbers split normal-round picks evenly
+  (the last present is skipped); even numbers are fairer in sudden death. Dylan
+  chose 12, so this is just something to watch when playtesting.
+- Does the chosen character do anything in the game?
