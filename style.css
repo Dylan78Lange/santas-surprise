@@ -13,6 +13,16 @@ body {
   width: min(90vw, 760px);
 }
 
+#score, #turn {
+  margin: 0 0 6px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+#turn {
+  color: #ffcf6e;
+}
+
 #message {
   min-height: 3.2em;
   margin: 0 0 12px;

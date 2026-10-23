@@ -22,10 +22,33 @@ const JOKES = [
 
 const presentsEl = document.getElementById('presents');
 const messageEl = document.getElementById('message');
+const turnEl = document.getElementById('turn');
+const scoreEl = document.getElementById('score');
 
 let round = 0;
 let bombIndex;
 let jokesLeft;
+let openedCount;
+let roundOver;
+let currentPlayer;
+const scores = [0, 0];
+
+function playerName(player) {
+  return 'Player ' + (player + 1);
+}
+
+function updateStatus() {
+  scoreEl.textContent = playerName(0) + ': ' + scores[0] + '   ' + playerName(1) + ': ' + scores[1];
+  turnEl.textContent = roundOver ? 'Round over' : playerName(currentPlayer) + "'s turn";
+}
+
+function endRound() {
+  roundOver = true;
+  document.querySelectorAll('.present').forEach(button => {
+    button.disabled = true;
+  });
+  updateStatus();
+}
 
 function shuffle(list) {
   const copy = list.slice();
@@ -37,17 +60,37 @@ function shuffle(list) {
 }
 
 function openPresent(button, index) {
-  if (index === bombIndex) {
-    messageEl.textContent = 'BOMB!';
-  } else {
-    let text = 'You are safe!';
-    if (Math.random() < JOKE_CHANCE && jokesLeft.length > 0) {
-      text += ' ' + jokesLeft.pop();
-    }
-    messageEl.textContent = text;
-  }
+  if (roundOver) return;
+
   button.classList.add('opened');
   button.disabled = true;
+  openedCount++;
+
+  if (index === bombIndex) {
+    const other = 1 - currentPlayer;
+    scores[other]++;
+    messageEl.textContent = 'BOMB! ' + playerName(other) + ' gets a point.';
+    endRound();
+    return;
+  }
+
+  let text = 'You are safe!';
+  if (Math.random() < JOKE_CHANCE && jokesLeft.length > 0) {
+    text += ' ' + jokesLeft.pop();
+  }
+
+  if (PRESENT_COUNT - openedCount === 1) {
+    scores[0]++;
+    scores[1]++;
+    text += ' Only one present left, so both players get a point.';
+    messageEl.textContent = text;
+    endRound();
+    return;
+  }
+
+  messageEl.textContent = text;
+  currentPlayer = 1 - currentPlayer;
+  updateStatus();
 }
 
 function showPresents() {
@@ -55,6 +98,10 @@ function showPresents() {
   messageEl.textContent = '';
   bombIndex = Math.floor(Math.random() * PRESENT_COUNT);
   jokesLeft = shuffle(JOKES);
+  openedCount = 0;
+  roundOver = false;
+  currentPlayer = 0;
+  updateStatus();
 
   for (let i = 0; i < PRESENT_COUNT; i++) {
     const button = document.createElement('button');

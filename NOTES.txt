@@ -65,7 +65,9 @@ BUILD ORDER
 1. Row of present buttons ............ DONE (4x3 grid, 12 presents)
 2. Random bomb + "You are safe!" joke .. DONE (1 in 2 joke chance, no repeats
    in a round; bomb currently just shows the word "BOMB!" as a placeholder)
-3. Turns and points
+3. Turns and points .................. DONE (Player 1 / Player 2 names for now;
+   score and whose turn shown above the presents; round locks when it ends,
+   by the bomb or by one present left; no next round starts yet)
 4. 3 rounds, then sudden death on a tie
 5. Character select
 6. Jump scare (picture + loud sound; sound must start after a click, browsers
