@@ -2,16 +2,28 @@ body {
   margin: 0;
   min-height: 100vh;
   background: #151a2a;
+  color: #fff;
+  font-family: Georgia, serif;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+#game {
+  width: min(90vw, 760px);
+}
+
+#message {
+  min-height: 3.2em;
+  margin: 0 0 12px;
+  text-align: center;
+  font-size: 1.2rem;
 }
 
 #presents {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  width: min(90vw, 760px);
 }
 
 .present {
@@ -19,6 +31,10 @@ body {
   border: none;
   padding: 0;
   cursor: pointer;
+}
+
+.present.opened {
+  visibility: hidden;
 }
 
 .present img {
