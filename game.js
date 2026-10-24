@@ -35,6 +35,7 @@ const CHARACTERS = [
   { id: 'gingerbread', name: 'Gingerbread Man', image: 'gingerbreadman.jpeg' },
   { id: 'snowman', name: 'Snowman', image: 'snowman.jpeg' },
   { id: 'grinch', name: 'Grinch', image: 'grinch.jpeg' },
+  { id: 'rudolph', name: 'Rudolph', image: 'Rudolph.jpeg' },
 ];
 
 const selectEl = document.getElementById('select');
