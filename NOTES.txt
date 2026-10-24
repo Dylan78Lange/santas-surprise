@@ -235,3 +235,13 @@ MP3 versions of the WAVs in Dylan's downloaded crackle-sounds.zip). The sounds a
 by lulyc on Freesound, license CC BY 3.0, so they need credit: a credit line is on
 the home screen and the full credit is in CREDITS.txt. Keep both if the sounds stay.
 The zip itself is NOT published (.gitignore ignores *.zip).
+
+WHY AN OLD VERSION SOMETIMES SHOWS UP (browser cache)
+-----------------------------------------------------
+GitHub Pages tells browsers to keep each file for 10 minutes, so right after an
+update a browser can still run the old game.js (this happened several times, for
+example the vinyl crackle seemed to play only in round 1 while the new version
+plays it every round). Fix for players: Cmd+Shift+R. Fix built in: index.html loads
+style.css?v=... and game.js?v=...; CHANGE THE v= VERSION IN index.html WHENEVER
+game.js OR style.css CHANGES, so a normal reload picks up the new files.
+Current version: 20261024b
