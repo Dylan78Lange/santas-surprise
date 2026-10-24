@@ -76,12 +76,71 @@ function prepareAudio() {
   try {
     audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
     if (audioContext.state === 'suspended') audioContext.resume();
+    loadScareSounds();
   } catch (error) {
     // no sound available
   }
 }
 
+// ---- recorded scare sounds (the mp3 files) ----
+const SCARE_SOUNDS = ['jumpsound01.mp3', 'jumpsound02.mp3', 'jumpsound03.mp3', 'jumpsound04.mp3', 'jumpsound05.mp3'];
+const SCARE_SOUND_MAX_SECONDS = 3; // longer sounds are faded out after this
+const SCREAM = 'scream'; // the scream made in code is one more choice
+const scareBuffers = {};
+let scareSoundsLoading = false;
+
+function loadScareSounds() {
+  if (!audioContext || scareSoundsLoading) return;
+  scareSoundsLoading = true;
+  SCARE_SOUNDS.forEach(file => {
+    fetch(file)
+      .then(response => response.arrayBuffer())
+      .then(data => audioContext.decodeAudioData(data))
+      .then(buffer => {
+        scareBuffers[file] = buffer;
+      })
+      .catch(() => {
+        // not loaded (for example the page was opened as a file), the fallback below is used
+      });
+  });
+}
+
+// returns false if this sound could not be played
+function playRecordedScare(file) {
+  try {
+    const buffer = scareBuffers[file];
+    if (buffer) {
+      const now = audioContext.currentTime;
+      const source = audioContext.createBufferSource();
+      const gain = audioContext.createGain();
+      gain.gain.setValueAtTime(SCARE_VOLUME, now);
+      gain.gain.setValueAtTime(SCARE_VOLUME, now + SCARE_SOUND_MAX_SECONDS - 0.4);
+      gain.gain.linearRampToValueAtTime(0, now + SCARE_SOUND_MAX_SECONDS);
+      source.buffer = buffer;
+      source.connect(gain);
+      gain.connect(audioContext.destination);
+      source.start(now);
+      source.stop(now + SCARE_SOUND_MAX_SECONDS);
+      return true;
+    }
+    const audio = new Audio(file); // plain audio element, also works when the page is opened as a file
+    audio.volume = SCARE_VOLUME;
+    audio.play().catch(() => playSyntheticScream());
+    setTimeout(() => audio.pause(), SCARE_SOUND_MAX_SECONDS * 1000);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 function playScareSound() {
+  prepareAudio();
+  const choices = SCARE_SOUNDS.concat(SCREAM);
+  const choice = choices[Math.floor(Math.random() * choices.length)];
+  if (choice === SCREAM || !playRecordedScare(choice)) playSyntheticScream();
+}
+
+function playSyntheticScream() {
   try {
     prepareAudio();
     const now = audioContext.currentTime;

@@ -192,3 +192,15 @@ A small speaker button in the
 top-right corner mutes/unmutes it; the mute choice is only remembered until the
 page is reloaded. Volume is MUSIC_VOLUME in game.js; the notes are the JINGLE_BELLS
 and WE_WISH_YOU lists.
+
+MORE SCARE SOUNDS (added after the music)
+-----------------------------------------
+Dylan's five recordings jumpsound01.mp3 .. jumpsound05.mp3 (1.5 to 7.6 seconds
+long) are now jump scare sounds, together with the original scream made in code:
+six sounds, one picked at random for every scare (list SCARE_SOUNDS in game.js).
+Any sound longer than 3 seconds is faded out at 3 seconds (SCARE_SOUND_MAX_SECONDS);
+the picture still stays for 2 seconds. They are loaded with a small fetch of the
+game's own files (nothing from other sites). If they can't be loaded (for example
+the page is opened as a plain file), a normal audio element is used, and if that
+fails the scream made in code plays. All five files are recorded at full volume
+(some are very loud on average), SCARE_VOLUME (0.7) still applies.
