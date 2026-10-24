@@ -22,6 +22,18 @@ const JOKES = [
   "Why couldn't the gingerbread man be a secret agent? He kept getting spotted by the milk.",
 ];
 
+const CHARACTERS = [
+  { id: 'santa', name: 'Santa', image: 'santa.jpeg' },
+  { id: 'elf', name: 'Elf', image: 'elf.jpeg' },
+  { id: 'gingerbread', name: 'Gingerbread Man', image: 'gingerbreadman.jpeg' },
+  { id: 'snowman', name: 'Snowman', image: 'snowman.jpeg' },
+  { id: 'grinch', name: 'Grinch', image: 'grinch.jpeg' },
+];
+
+const selectEl = document.getElementById('select');
+const selectTitleEl = document.getElementById('selectTitle');
+const charactersEl = document.getElementById('characters');
+const gameEl = document.getElementById('game');
 const presentsEl = document.getElementById('presents');
 const messageEl = document.getElementById('message');
 const turnEl = document.getElementById('turn');
@@ -36,9 +48,48 @@ let roundOver;
 let currentPlayer;
 let gameOver;
 let scores;
+let chosen = [null, null];
 
 function playerName(player) {
-  return 'Player ' + (player + 1);
+  const character = chosen[player];
+  if (!character) return 'Player ' + (player + 1);
+  if (chosen[0] === chosen[1]) return character.name + ' ' + (player + 1);
+  return character.name;
+}
+
+function showSelect(player) {
+  gameEl.hidden = true;
+  selectEl.hidden = false;
+  selectTitleEl.textContent = 'Player ' + (player + 1) + ', choose your character';
+  charactersEl.innerHTML = '';
+
+  CHARACTERS.forEach(character => {
+    const button = document.createElement('button');
+    button.className = 'character';
+    button.addEventListener('click', () => chooseCharacter(player, character));
+
+    const img = document.createElement('img');
+    img.src = character.image;
+    img.alt = character.name;
+
+    const label = document.createElement('span');
+    label.textContent = character.name;
+
+    button.appendChild(img);
+    button.appendChild(label);
+    charactersEl.appendChild(button);
+  });
+}
+
+function chooseCharacter(player, character) {
+  chosen[player] = character;
+  if (player === 0) {
+    showSelect(1);
+  } else {
+    selectEl.hidden = true;
+    gameEl.hidden = false;
+    startRound(0);
+  }
 }
 
 function roundLabel() {
@@ -46,7 +97,22 @@ function roundLabel() {
 }
 
 function updateStatus() {
-  scoreEl.textContent = playerName(0) + ': ' + scores[0] + '   ' + playerName(1) + ': ' + scores[1];
+  scoreEl.innerHTML = '';
+  [0, 1].forEach(player => {
+    const item = document.createElement('div');
+    item.className = 'scoreItem';
+
+    const img = document.createElement('img');
+    img.src = chosen[player].image;
+    img.alt = chosen[player].name;
+
+    const text = document.createElement('span');
+    text.textContent = playerName(player) + ': ' + scores[player];
+
+    item.appendChild(img);
+    item.appendChild(text);
+    scoreEl.appendChild(item);
+  });
   const turn = roundOver ? 'Round over' : playerName(currentPlayer) + "'s turn";
   turnEl.textContent = roundLabel() + ' · ' + turn;
 }
@@ -159,7 +225,8 @@ function startRound(newRound) {
 function startGame() {
   scores = [0, 0];
   gameOver = false;
-  startRound(0);
+  chosen = [null, null];
+  showSelect(0);
 }
 
 startGame();

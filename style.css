@@ -13,7 +13,64 @@ body {
   width: min(90vw, 760px);
 }
 
-#score, #turn {
+#select {
+  width: min(90vw, 760px);
+  text-align: center;
+}
+
+#selectTitle {
+  font-size: 1.4rem;
+  margin: 0 0 16px;
+}
+
+#characters {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.character {
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 4px;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.character:hover {
+  border-color: #ffcf6e;
+}
+
+.character img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  display: block;
+}
+
+#score {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+}
+
+.scoreItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scoreItem img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+#turn {
   margin: 0 0 6px;
   text-align: center;
   font-size: 1.1rem;

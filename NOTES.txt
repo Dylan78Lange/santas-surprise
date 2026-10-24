@@ -73,7 +73,11 @@ BUILD ORDER
    sudden death"; a "Play again" button after the game. In sudden death there
    is no skip rule, the bomb opener loses, scores don't change. Who goes first
    in sudden death is a RANDOM PLACEHOLDER until the wheel (step 7) is built.)
-5. Character select
+5. Character select .................. DONE (Player 1 picks, then Player 2;
+   both may pick the same character. The character's name replaces "Player 1/2"
+   everywhere and its picture shows next to the score. If both pick the same
+   one the names get " 1" / " 2". Character select shows again on Play again.
+   Characters don't have any special power.)
 6. Jump scare (picture + loud sound; sound must start after a click, browsers
    block audio before that)
 7. Spin-the-wheel for sudden death (build last)
@@ -86,6 +90,8 @@ game.js     - makes the present buttons; `round` picks the image,
               showPresents() redraws them and picks a new random bomb;
               openPresent() handles a click; JOKES holds the 15 jokes
 present*.jpeg - the four present pictures (about 1.5-1.9 MB each)
+santa.jpeg, elf.jpeg, gingerbreadman.jpeg, snowman.jpeg, grinch.jpeg - the five
+              character pictures (about 1.5-1.9 MB each, 2048x2048)
 To play: double-click index.html.
 
 OPEN QUESTIONS
