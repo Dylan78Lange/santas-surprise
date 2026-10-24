@@ -336,6 +336,28 @@ body {
   font-size: 1.1rem;
 }
 
+#mute {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  line-height: 1;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  #game {
+    padding-top: 52px;
+  }
+}
+
 #scare {
   position: fixed;
   inset: 0;

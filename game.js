@@ -133,7 +133,119 @@ function playScareSound() {
   }
 }
 
+// ---- Christmas music: two old carols (public domain) played with a bell sound ----
+const MUSIC_VOLUME = 0.22;
+const NOTE_SEMITONES = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+
+function noteFrequency(name) {
+  const [, letter, sharp, octave] = name.match(/^([A-G])(#?)(\d)$/);
+  const midi = 12 * (Number(octave) + 1) + NOTE_SEMITONES[letter] + (sharp ? 1 : 0) + 12; // an octave up, brighter
+  return 440 * Math.pow(2, (midi - 69) / 12);
+}
+
+// [note, beats]; a null note is a rest
+const JINGLE_BELLS = [
+  ['E4', 1], ['E4', 1], ['E4', 2], ['E4', 1], ['E4', 1], ['E4', 2],
+  ['E4', 1], ['G4', 1], ['C4', 1.5], ['D4', 0.5], ['E4', 4],
+  ['F4', 1], ['F4', 1], ['F4', 1.5], ['F4', 0.5], ['F4', 1], ['E4', 1], ['E4', 1], ['E4', 0.5], ['E4', 0.5],
+  ['E4', 1], ['D4', 1], ['D4', 1], ['E4', 1], ['D4', 2], ['G4', 2],
+  ['E4', 1], ['E4', 1], ['E4', 2], ['E4', 1], ['E4', 1], ['E4', 2],
+  ['E4', 1], ['G4', 1], ['C4', 1.5], ['D4', 0.5], ['E4', 4],
+  ['F4', 1], ['F4', 1], ['F4', 1], ['F4', 1], ['F4', 1], ['E4', 1], ['E4', 1], ['E4', 0.5], ['E4', 0.5],
+  ['G4', 1], ['G4', 1], ['F4', 1], ['D4', 1], ['C4', 4],
+  [null, 2],
+];
+
+const WE_WISH_YOU = [
+  ['D4', 1], ['G4', 1], ['G4', 0.5], ['A4', 0.5], ['G4', 0.5], ['F#4', 0.5],
+  ['E4', 1], ['E4', 1], ['E4', 1], ['A4', 1], ['A4', 0.5], ['B4', 0.5], ['A4', 0.5], ['G4', 0.5],
+  ['F#4', 1], ['D4', 1], ['D4', 1], ['B4', 1], ['B4', 0.5], ['C5', 0.5], ['B4', 0.5], ['A4', 0.5],
+  ['G4', 1], ['E4', 1], ['D4', 0.5], ['D4', 0.5], ['E4', 1], ['A4', 1], ['F#4', 1], ['G4', 3],
+  [null, 2],
+];
+
+const SONG = [];
+[[JINGLE_BELLS, 0.38], [WE_WISH_YOU, 0.44]].forEach(([tune, beat]) => {
+  tune.forEach(([note, beats]) => SONG.push({ frequency: note ? noteFrequency(note) : null, seconds: beats * beat }));
+});
+
+let musicOn = false;
+let musicWanted = false;
+let musicMuted = false;
+let musicGain;
+let musicTimer;
+let musicIndex = 0;
+let nextNoteTime = 0;
+
+function playBell(frequency, time, seconds) {
+  const gain = audioContext.createGain();
+  const ring = Math.max(seconds, 0.3) + 0.3;
+  gain.gain.setValueAtTime(0.0001, time);
+  gain.gain.exponentialRampToValueAtTime(0.5, time + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, time + ring);
+  [[frequency, 'sine', 1], [frequency * 2, 'triangle', 0.35], [frequency * 3.01, 'sine', 0.12]].forEach(([pitch, type, level]) => {
+    const osc = audioContext.createOscillator();
+    const part = audioContext.createGain();
+    osc.type = type;
+    osc.frequency.value = pitch;
+    part.gain.value = level;
+    osc.connect(part);
+    part.connect(gain);
+    osc.start(time);
+    osc.stop(time + ring + 0.05);
+  });
+  gain.connect(musicGain);
+}
+
+function scheduleMusic() {
+  while (nextNoteTime < audioContext.currentTime + 0.4) {
+    const note = SONG[musicIndex];
+    if (note.frequency) playBell(note.frequency, nextNoteTime, note.seconds);
+    nextNoteTime += note.seconds;
+    musicIndex = (musicIndex + 1) % SONG.length;
+  }
+}
+
+function startMusic() {
+  if (!musicWanted || musicMuted || musicOn) return;
+  prepareAudio();
+  if (!audioContext) return;
+  musicOn = true;
+  musicGain = audioContext.createGain();
+  musicGain.gain.value = MUSIC_VOLUME;
+  musicGain.connect(audioContext.destination);
+  nextNoteTime = audioContext.currentTime + 0.1;
+  scheduleMusic();
+  musicTimer = setInterval(scheduleMusic, 100);
+}
+
+function stopMusic() {
+  if (!musicOn) return;
+  musicOn = false;
+  clearInterval(musicTimer);
+  const gain = musicGain;
+  gain.gain.cancelScheduledValues(audioContext.currentTime);
+  gain.gain.setTargetAtTime(0, audioContext.currentTime, 0.02); // cut notes that are already queued
+  setTimeout(() => gain.disconnect(), 600);
+}
+
+function setMusicWanted(wanted) {
+  musicWanted = wanted;
+  if (wanted) startMusic();
+  else stopMusic();
+}
+
+const muteEl = document.getElementById('mute');
+muteEl.onclick = () => {
+  musicMuted = !musicMuted;
+  muteEl.textContent = musicMuted ? '🔇' : '🔊';
+  muteEl.setAttribute('aria-label', musicMuted ? 'Turn music on' : 'Turn music off');
+  if (musicMuted) stopMusic();
+  else startMusic();
+};
+
 function playJumpScare() {
+  setMusicWanted(false);
   clearTimeout(scareTimer);
   scareImgEl.hidden = false;
   scareImgEl.src = GHOUL_IMAGES[Math.floor(Math.random() * GHOUL_IMAGES.length)];
@@ -461,6 +573,7 @@ function openPresent(button, index) {
 }
 
 function startRound(newRound) {
+  setMusicWanted(true); // music comes back after a scare
   clearTimeout(botTimer);
   round = newRound;
   presentsEl.innerHTML = '';
@@ -531,6 +644,7 @@ function showMode() {
 function chooseMode(withBot) {
   vsBot = withBot;
   prepareAudio(); // a click is needed before a browser lets the scare sound play
+  setMusicWanted(true);
   document.getElementById('mode').hidden = true;
   if (warningSeen) {
     startGame();
@@ -540,6 +654,8 @@ function chooseMode(withBot) {
 }
 
 document.getElementById('play').onclick = () => {
+  prepareAudio();
+  setMusicWanted(true); // the music starts at the first click, browsers don't allow sound before that
   document.getElementById('home').hidden = true;
   showMode();
 };

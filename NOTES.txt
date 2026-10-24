@@ -138,7 +138,8 @@ WARNING SCREEN + SECURITY (added after publishing)
 --------------------------------------------------
 - A warning screen shows when the game first loads (loud sounds, sudden scary
   pictures, flashing/shaking). "I understand, start" goes to character select.
-  "Play again" skips the warning. The red flashing itself was NOT changed.
+  "Play again" goes back to the Mode screen and skips the warning. The red
+  flashing itself was NOT changed.
 - GitHub secret scanning is ON. Push protection is still off.
 - Security scan found no serious problems: no secrets, no outside scripts, no
   cookies/storage/network calls, typed names can't inject code, images have no
@@ -155,8 +156,7 @@ button in the middle, with the six character pictures (one each) floating
 slowly around the whole screen behind them (positions in HOME_POSITIONS in
 game.js; the float animation is in style.css). Order is now:
   Home -> Warning -> Character select -> Name -> Game.
-"Play again" after a game goes straight to character select (skips home and
-the warning).
+(Later changed: "Play again" now goes back to the Mode screen; see below.)
 
 PLAY AGAINST THE BOT (added after the floating home screen)
 -----------------------------------------------------------
@@ -176,3 +176,15 @@ Screen order now: Home (Play) -> Mode (friend or bot) -> Warning -> Character
 select -> Name -> Game. After a game, "Play again" goes back to the Mode screen
 ("How do you want to play?"), so players can switch between a friend and the
 bot. The warning only shows the first time (after that it is skipped).
+
+CHRISTMAS MUSIC (added after the bot)
+-------------------------------------
+Jolly music plays from the first click on the home screen's Play button (browsers
+do not allow any sound before a click) until the jump scare. It is two old
+public-domain carols, Jingle Bells and We Wish You a Merry Christmas, played in
+a loop with a bell sound made in the browser (no music file). After the scare it
+stays silent through the round result and comes back when the next round starts
+(or when a new game is chosen on the Mode screen). A small speaker button in the
+top-right corner mutes/unmutes it; the mute choice is only remembered until the
+page is reloaded. Volume is MUSIC_VOLUME in game.js; the notes are the JINGLE_BELLS
+and WE_WISH_YOU lists.
