@@ -179,12 +179,16 @@ bot. The warning only shows the first time (after that it is skipped).
 
 CHRISTMAS MUSIC (added after the bot)
 -------------------------------------
-Jolly music plays from the first click on the home screen's Play button (browsers
-do not allow any sound before a click) until the jump scare. It is two old
-public-domain carols, Jingle Bells and We Wish You a Merry Christmas, played in
-a loop with a bell sound made in the browser (no music file). After the scare it
-stays silent through the round result and comes back when the next round starts
-(or when a new game is chosen on the Mode screen). A small speaker button in the
+Jolly music starts when the game starts (the first round begins) and plays until
+the jump scare. It is silent on the home, mode, warning, character select and
+name screens, and it stops again when "Play again" takes players back to the Mode
+screen. It is two old public-domain carols, Jingle Bells and We Wish You a Merry
+Christmas, played in a loop with a bell sound made in the browser (no music
+file). After a scare it stays silent through the round result and comes back when
+the next round starts. It keeps playing on the wheel screen (that is mid-game).
+(Browsers allow no sound before a click, so the audio is unlocked at the first
+Play click, but nothing plays until the game starts.)
+A small speaker button in the
 top-right corner mutes/unmutes it; the mute choice is only remembered until the
 page is reloaded. Volume is MUSIC_VOLUME in game.js; the notes are the JINGLE_BELLS
 and WE_WISH_YOU lists.

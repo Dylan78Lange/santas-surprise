@@ -573,7 +573,7 @@ function openPresent(button, index) {
 }
 
 function startRound(newRound) {
-  setMusicWanted(true); // music comes back after a scare
+  setMusicWanted(true); // the music starts with the game, and comes back after a scare
   clearTimeout(botTimer);
   round = newRound;
   presentsEl.innerHTML = '';
@@ -606,6 +606,7 @@ function startRound(newRound) {
 }
 
 function startGame() {
+  setMusicWanted(false); // music waits until the first round begins
   clearTimeout(botTimer);
   scores = [0, 0];
   gameOver = false;
@@ -632,6 +633,7 @@ let warningSeen = false;
 
 // asks "friend or bot?" again, for example after a game ends
 function showMode() {
+  setMusicWanted(false); // no music in the menus
   clearTimeout(botTimer);
   clearTimeout(wheelTimer);
   gameEl.hidden = true;
@@ -644,7 +646,6 @@ function showMode() {
 function chooseMode(withBot) {
   vsBot = withBot;
   prepareAudio(); // a click is needed before a browser lets the scare sound play
-  setMusicWanted(true);
   document.getElementById('mode').hidden = true;
   if (warningSeen) {
     startGame();
@@ -654,8 +655,7 @@ function chooseMode(withBot) {
 }
 
 document.getElementById('play').onclick = () => {
-  prepareAudio();
-  setMusicWanted(true); // the music starts at the first click, browsers don't allow sound before that
+  prepareAudio(); // a click is needed before a browser lets any sound play
   document.getElementById('home').hidden = true;
   showMode();
 };
