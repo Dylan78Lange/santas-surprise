@@ -146,3 +146,12 @@ WARNING SCREEN + SECURITY (added after publishing)
 - Known: Dylan's email (25220434+Dylan78Lange@users.noreply.github.com) is in the public commit history.
   Use GitHub's "noreply" email for future commits.
 - The repo uses the Apache-2.0 license (others may reuse code and pictures).
+
+HOME SCREEN (added after the warning screen)
+--------------------------------------------
+Game title is now "Santa's Surprise" (also the browser tab title). The first
+screen is a home screen: the title, a present picture (present.jpeg), the six
+character pictures in a row, and a Play button. Order is now:
+  Home -> Warning -> Character select -> Name -> Game.
+"Play again" after a game goes straight to character select (skips home and
+the warning).

@@ -457,6 +457,18 @@ function startGame() {
   showSelect(0);
 }
 
+CHARACTERS.forEach(character => {
+  const img = document.createElement('img');
+  img.src = character.image;
+  img.alt = character.name;
+  document.getElementById('homeCharacters').appendChild(img);
+});
+
+document.getElementById('play').onclick = () => {
+  document.getElementById('home').hidden = true;
+  document.getElementById('warning').hidden = false;
+};
+
 document.getElementById('warningContinue').onclick = () => {
   document.getElementById('warning').hidden = true;
   startGame();

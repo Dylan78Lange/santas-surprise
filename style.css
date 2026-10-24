@@ -29,6 +29,50 @@ body {
   container-type: size;
 }
 
+#home {
+  width: min(90vw, 640px);
+  text-align: center;
+}
+
+#home h1 {
+  margin: 0 0 6px;
+  color: #ffcf6e;
+  font-size: clamp(1.8rem, 7vh, 3.2rem);
+}
+
+#homePresent {
+  display: block;
+  margin: 0 auto 6px;
+  width: min(40vw, 24vh);
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+#homeCharacters {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+#homeCharacters img {
+  width: min(12vw, 9vh);
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+#play {
+  padding: 12px 40px;
+  font: inherit;
+  font-size: 1.3rem;
+  color: #fff;
+  background: #b3202a;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 #warning {
   width: min(90vw, 460px);
   text-align: center;
