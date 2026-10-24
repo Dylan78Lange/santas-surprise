@@ -457,4 +457,7 @@ function startGame() {
   showSelect(0);
 }
 
-startGame();
+document.getElementById('warningContinue').onclick = () => {
+  document.getElementById('warning').hidden = true;
+  startGame();
+};

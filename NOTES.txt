@@ -133,3 +133,16 @@ Published with GitHub Pages from the main branch (root). To update the online
 game, commit changes and run `git push`; the site rebuilds in about a minute
 (use Cmd+Shift+R to see the new version). File names must match exactly,
 including capital letters, because GitHub's servers care about them.
+
+WARNING SCREEN + SECURITY (added after publishing)
+--------------------------------------------------
+- A warning screen shows when the game first loads (loud sounds, sudden scary
+  pictures, flashing/shaking). "I understand, start" goes to character select.
+  "Play again" skips the warning. The red flashing itself was NOT changed.
+- GitHub secret scanning is ON. Push protection is still off.
+- Security scan found no serious problems: no secrets, no outside scripts, no
+  cookies/storage/network calls, typed names can't inject code, images have no
+  hidden metadata, HTTPS is enforced.
+- Known: Dylan's email (25220434+Dylan78Lange@users.noreply.github.com) is in the public commit history.
+  Use GitHub's "noreply" email for future commits.
+- The repo uses the Apache-2.0 license (others may reuse code and pictures).
