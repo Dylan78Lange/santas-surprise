@@ -93,6 +93,12 @@ BUILD ORDER
    wheel to land on one of the winner's slices (about 4 seconds). Then it says
    "<name> goes first!" and a "Start sudden death" button begins the round.)
 
+NAMES (added after step 7): after picking a character each player must type a
+name (up to 12 letters, can't be blank). It shows as "Sam (Santa)" everywhere:
+score, turn line, messages, wheel legend. If two players end up with the same
+name AND the same character, " 1" / " 2" is added to the name.
+There is no "go back" button on the name screen yet.
+
 SCARE IMAGES: ghoulelf.jpeg, ghoulreindeer.jpeg, ghoulsanta.jpeg,
 ghoulsnowman.jpeg (2752x1536 each, about 3 MB). Each jump scare picks one at
 random (list GHOUL_IMAGES at the top of game.js; all four are loaded ahead of
