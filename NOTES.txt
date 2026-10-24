@@ -207,3 +207,27 @@ game's own files (nothing from other sites). If they can't be loaded (for exampl
 the page is opened as a plain file), a normal audio element is used, and if that
 fails the scream made in code plays. All five files are recorded at full volume
 (some are very loud on average), SCARE_VOLUME (0.7) still applies.
+
+MORE CAROLS AND THE VINYL CRACKLE (added after the scare sounds)
+----------------------------------------------------------------
+Five carols now play instead of two: Jingle Bells, We Wish You a Merry Christmas,
+Joy to the World, Hark! The Herald Angels Sing and O Tannenbaum. All are old
+public-domain tunes. Joy to the World, Hark and O Tannenbaum were typed in from
+note text on Wikipedia (the Joy tune is from Lowell Mason's 1839 hymnal) and
+checked by a script: same notes in the same order, and bar lengths add up. The
+songs are in the SONGS list in game.js. Every time the music starts it plays all
+five once in a fresh shuffled order (never the same song twice in a row), then
+reshuffles. One full round of the playlist is about 2 minutes.
+Dylan wanted Deck the Halls, Up on the Housetop, Jolly Old Saint Nicholas as well,
+but no reliable note source was found, so they are NOT in yet.
+Bug found while testing (fixed before publishing): note names with a flat (Bb)
+were not understood, which crashed the whole game script.
+
+Vinyl crackle: when a GAME STARTS (first round only, not after a scare, not on the
+next rounds) a random one of three vinyl "start crackle" sounds plays; the carols
+start 3 seconds later (VINYL_LEAD_SECONDS) and the crackle goes on softly under
+them until it ends. Files: vinylstart1.mp3, vinylstart2.mp3, vinylstart3.mp3 (small
+MP3 versions of the WAVs in Dylan's downloaded crackle-sounds.zip). The sounds are
+by lulyc on Freesound, license CC BY 3.0, so they need credit: a credit line is on
+the home screen and the full credit is in CREDITS.txt. Keep both if the sounds stay.
+The zip itself is NOT published (.gitignore ignores *.zip).

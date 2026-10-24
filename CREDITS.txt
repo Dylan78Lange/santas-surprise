@@ -1,0 +1,26 @@
+CREDITS
+=======
+
+Vinyl crackle sounds
+--------------------
+vinylstart1.mp3, vinylstart2.mp3 and vinylstart3.mp3 are based on the sounds
+"vinyl start crackle 1", "vinyl start crackle 2" and "vinyl start crackle 3" by
+lulyc, from the pack "Vinyl start and end crackle sounds" on Freesound:
+
+  Author:  lulyc  https://freesound.org/people/lulyc/
+  Pack:    https://freesound.org/people/lulyc/packs/19233/
+  Sounds:  https://freesound.org/s/339447/  (start crackle 1)
+           https://freesound.org/s/339452/  (start crackle 2)
+           https://freesound.org/s/339451/  (start crackle 3)
+  License: Creative Commons Attribution 3.0 (CC BY 3.0)
+           https://creativecommons.org/licenses/by/3.0/
+
+Changes made: the original WAV files were converted to smaller MP3 files. The game
+also plays them louder or softer while it runs. Nothing else was changed.
+
+Christmas songs
+---------------
+The carols (Jingle Bells, We Wish You a Merry Christmas, Joy to the World,
+Hark! The Herald Angels Sing and O Tannenbaum) are traditional tunes that are in
+the public domain. They are played by the game itself with a bell sound made in
+the browser.

@@ -1,0 +1,3 @@
+# downloaded sound packs and other zips stay on this computer, they are not published
+*.zip
+.DS_Store

@@ -77,6 +77,7 @@ function prepareAudio() {
     audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
     if (audioContext.state === 'suspended') audioContext.resume();
     loadScareSounds();
+    loadVinylSounds();
   } catch (error) {
     // no sound available
   }
@@ -197,8 +198,9 @@ const MUSIC_VOLUME = 0.22;
 const NOTE_SEMITONES = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 
 function noteFrequency(name) {
-  const [, letter, sharp, octave] = name.match(/^([A-G])(#?)(\d)$/);
-  const midi = 12 * (Number(octave) + 1) + NOTE_SEMITONES[letter] + (sharp ? 1 : 0) + 12; // an octave up, brighter
+  const [, letter, accidental, octave] = name.match(/^([A-G])([#b]?)(\d)$/);
+  const shift = accidental === '#' ? 1 : accidental === 'b' ? -1 : 0;
+  const midi = 12 * (Number(octave) + 1) + NOTE_SEMITONES[letter] + shift + 12; // an octave up, brighter
   return 440 * Math.pow(2, (midi - 69) / 12);
 }
 
@@ -223,18 +225,76 @@ const WE_WISH_YOU = [
   [null, 2],
 ];
 
-const SONG = [];
-[[JINGLE_BELLS, 0.38], [WE_WISH_YOU, 0.44]].forEach(([tune, beat]) => {
-  tune.forEach(([note, beats]) => SONG.push({ frequency: note ? noteFrequency(note) : null, seconds: beats * beat }));
-});
+// Joy to the World, in D major (Lowell Mason's 1839 tune)
+const JOY_TO_THE_WORLD = [
+  ['D5', 1], ['C#5', 0.75], ['B4', 0.25], ['A4', 1.5], ['G4', 0.5], ['F#4', 1], ['E4', 1],
+  ['D4', 1.5], ['A4', 0.5], ['B4', 1.5], ['B4', 0.5], ['C#5', 1.5], ['C#5', 0.5], ['D5', 3.5],
+  ['D5', 0.5], ['D5', 0.5], ['C#5', 0.5], ['B4', 0.5], ['A4', 0.5], ['A4', 0.75], ['G4', 0.25], ['F#4', 0.5],
+  ['D5', 0.5], ['D5', 0.5], ['C#5', 0.5], ['B4', 0.5], ['A4', 0.5], ['A4', 0.75], ['G4', 0.25], ['F#4', 0.5],
+  ['F#4', 0.5], ['F#4', 0.5], ['F#4', 0.5], ['F#4', 0.5], ['F#4', 0.25], ['G4', 0.25], ['A4', 1.5], ['G4', 0.25], ['F#4', 0.25],
+  ['E4', 0.5], ['E4', 0.5], ['E4', 0.5], ['E4', 0.25], ['F#4', 0.25], ['G4', 1.5], ['F#4', 0.25], ['E4', 0.25],
+  ['F#4', 0.5], ['D5', 1], ['B4', 0.5], ['A4', 0.75], ['G4', 0.25], ['F#4', 0.5], ['G4', 0.5],
+  ['F#4', 1], ['E4', 1], ['D4', 2],
+  [null, 2],
+];
+
+// Hark! The Herald Angels Sing, in F major (Mendelssohn's tune)
+const HARK_THE_HERALD = [
+  ['C4', 1], ['F4', 1], ['F4', 1.5], ['E4', 0.5], ['F4', 1], ['A4', 1], ['A4', 1], ['G4', 1],
+  ['C5', 1], ['C5', 1], ['C5', 1.5], ['Bb4', 0.5], ['A4', 1], ['G4', 1], ['A4', 2],
+  ['C4', 1], ['F4', 1], ['F4', 1.5], ['E4', 0.5], ['F4', 1], ['A4', 1], ['A4', 1], ['G4', 1],
+  ['C5', 1], ['G4', 1], ['G4', 1.5], ['E4', 0.5], ['E4', 1], ['D4', 1], ['C4', 2],
+  ['C5', 1], ['C5', 1], ['C5', 1], ['F4', 1], ['Bb4', 1], ['A4', 1], ['A4', 1], ['G4', 1],
+  ['C5', 1], ['C5', 1], ['C5', 1], ['F4', 1], ['Bb4', 1], ['A4', 1], ['A4', 1], ['G4', 1],
+  ['D5', 1], ['D5', 1], ['D5', 1], ['C5', 1], ['Bb4', 1], ['A4', 1], ['Bb4', 2],
+  ['G4', 1], ['A4', 0.5], ['Bb4', 0.5], ['C5', 1.5], ['F4', 0.5], ['F4', 1], ['G4', 1], ['A4', 2],
+  ['D5', 1.5], ['D5', 0.5], ['D5', 1], ['C5', 1], ['Bb4', 1], ['A4', 1], ['Bb4', 2],
+  ['G4', 1], ['A4', 0.5], ['Bb4', 0.5], ['C5', 1.5], ['F4', 0.5], ['F4', 1], ['G4', 1], ['F4', 2],
+  [null, 2],
+];
+
+// O Tannenbaum, in G major: the tune, the middle part, then the tune again
+const O_TANNENBAUM_TUNE = [
+  ['D4', 0.5], ['G4', 0.75], ['G4', 0.25], ['G4', 1], ['A4', 1],
+  ['B4', 0.75], ['B4', 0.25], ['B4', 1.5], ['B4', 0.5],
+  ['A4', 0.5], ['B4', 0.5], ['C5', 1], ['F#4', 1], ['A4', 1], ['G4', 1], [null, 0.5],
+];
+const O_TANNENBAUM_MIDDLE = [
+  ['D5', 0.5], ['D5', 0.5], ['B4', 0.5], ['E5', 1.5], ['D5', 0.5],
+  ['D5', 0.5], ['C5', 0.5], ['C5', 1.5], ['C5', 0.5],
+  ['C5', 0.5], ['A4', 0.5], ['D5', 1.5], ['C5', 0.5],
+  ['C5', 0.5], ['B4', 0.5], ['B4', 1], [null, 0.5],
+];
+const O_TANNENBAUM = [...O_TANNENBAUM_TUNE, ...O_TANNENBAUM_MIDDLE, ...O_TANNENBAUM_TUNE, [null, 2]];
+
+// seconds is how long one quarter note lasts
+const SONGS = [
+  { name: 'Jingle Bells', notes: JINGLE_BELLS, seconds: 0.38 },
+  { name: 'We Wish You a Merry Christmas', notes: WE_WISH_YOU, seconds: 0.44 },
+  { name: 'Joy to the World', notes: JOY_TO_THE_WORLD, seconds: 0.5 },
+  { name: 'Hark! The Herald Angels Sing', notes: HARK_THE_HERALD, seconds: 0.5 },
+  { name: 'O Tannenbaum', notes: O_TANNENBAUM, seconds: 0.5 },
+].map(song => ({
+  name: song.name,
+  notes: song.notes.map(([note, beats]) => ({ frequency: note ? noteFrequency(note) : null, seconds: beats * song.seconds })),
+}));
 
 let musicOn = false;
 let musicWanted = false;
 let musicMuted = false;
 let musicGain;
 let musicTimer;
-let musicIndex = 0;
+let playlist = []; // the order the songs play in, shuffled each time the music starts
+let songIndex = 0;
+let noteIndex = 0;
+let lastSongStarted = -1;
 let nextNoteTime = 0;
+
+function shuffledSongOrder() {
+  const order = shuffle(SONGS.map((song, i) => i));
+  if (order.length > 1 && order[0] === lastSongStarted) order.push(order.shift()); // don't repeat the last song
+  return order;
+}
 
 function playBell(frequency, time, seconds) {
   const gain = audioContext.createGain();
@@ -258,14 +318,94 @@ function playBell(frequency, time, seconds) {
 
 function scheduleMusic() {
   while (nextNoteTime < audioContext.currentTime + 0.4) {
-    const note = SONG[musicIndex];
+    const song = SONGS[playlist[songIndex]];
+    if (noteIndex === 0) lastSongStarted = playlist[songIndex];
+    const note = song.notes[noteIndex];
     if (note.frequency) playBell(note.frequency, nextNoteTime, note.seconds);
     nextNoteTime += note.seconds;
-    musicIndex = (musicIndex + 1) % SONG.length;
+    noteIndex++;
+    if (noteIndex >= song.notes.length) {
+      noteIndex = 0;
+      songIndex++;
+      if (songIndex >= playlist.length) {
+        playlist = shuffledSongOrder();
+        songIndex = 0;
+      }
+    }
   }
 }
 
-function startMusic() {
+// ---- vinyl crackle before the carols (sounds by lulyc, CC BY 3.0, see CREDITS.txt) ----
+const VINYL_SOUNDS = ['vinylstart1.mp3', 'vinylstart2.mp3', 'vinylstart3.mp3'];
+const VINYL_LEAD_SECONDS = 3; // the carols start this long after the crackle begins
+const VINYL_LEVEL = 0.9; // the loudest crackle in each recording is raised to this
+const vinylBuffers = {};
+const vinylLevels = {};
+let vinylLoading = false;
+let vinylSource;
+let vinylGain;
+
+function loadVinylSounds() {
+  if (!audioContext || vinylLoading) return;
+  vinylLoading = true;
+  VINYL_SOUNDS.forEach(file => {
+    fetch(file)
+      .then(response => response.arrayBuffer())
+      .then(data => audioContext.decodeAudioData(data))
+      .then(buffer => {
+        let peak = 0.01;
+        for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+          buffer.getChannelData(channel).forEach(sample => {
+            peak = Math.max(peak, Math.abs(sample));
+          });
+        }
+        vinylLevels[file] = Math.min(3, VINYL_LEVEL / peak); // the quiet recordings are made louder
+        vinylBuffers[file] = buffer;
+      })
+      .catch(() => {
+        // not loaded (for example the page was opened as a file): the carols just start without it
+      });
+  });
+}
+
+// plays a random crackle, returns how many seconds the carols should wait
+function startVinyl() {
+  const loaded = VINYL_SOUNDS.filter(file => vinylBuffers[file]);
+  if (!loaded.length) return 0;
+  const file = loaded[Math.floor(Math.random() * loaded.length)];
+  const start = audioContext.currentTime + 0.1;
+  const level = vinylLevels[file];
+  vinylGain = audioContext.createGain();
+  vinylGain.gain.setValueAtTime(level, start);
+  vinylGain.gain.setValueAtTime(level, start + VINYL_LEAD_SECONDS);
+  vinylGain.gain.linearRampToValueAtTime(level * 0.45, start + VINYL_LEAD_SECONDS + 1); // softer under the carols
+  vinylSource = audioContext.createBufferSource();
+  vinylSource.buffer = vinylBuffers[file];
+  vinylSource.connect(vinylGain);
+  vinylGain.connect(audioContext.destination);
+  vinylSource.start(start);
+  return VINYL_LEAD_SECONDS;
+}
+
+function stopVinyl() {
+  if (!vinylGain) return;
+  const gain = vinylGain;
+  const source = vinylSource;
+  vinylGain = null;
+  vinylSource = null;
+  gain.gain.cancelScheduledValues(audioContext.currentTime);
+  gain.gain.setTargetAtTime(0, audioContext.currentTime, 0.02);
+  setTimeout(() => {
+    try {
+      source.stop();
+    } catch (error) {
+      // it had already finished
+    }
+    gain.disconnect();
+  }, 600);
+}
+
+function startMusic(withVinyl = false) {
   if (!musicWanted || musicMuted || musicOn) return;
   prepareAudio();
   if (!audioContext) return;
@@ -273,7 +413,11 @@ function startMusic() {
   musicGain = audioContext.createGain();
   musicGain.gain.value = MUSIC_VOLUME;
   musicGain.connect(audioContext.destination);
-  nextNoteTime = audioContext.currentTime + 0.1;
+  playlist = shuffledSongOrder(); // a fresh shuffled order, starting with a whole song
+  songIndex = 0;
+  noteIndex = 0;
+  const lead = withVinyl ? startVinyl() : 0;
+  nextNoteTime = audioContext.currentTime + 0.1 + lead;
   scheduleMusic();
   musicTimer = setInterval(scheduleMusic, 100);
 }
@@ -282,15 +426,16 @@ function stopMusic() {
   if (!musicOn) return;
   musicOn = false;
   clearInterval(musicTimer);
+  stopVinyl();
   const gain = musicGain;
   gain.gain.cancelScheduledValues(audioContext.currentTime);
   gain.gain.setTargetAtTime(0, audioContext.currentTime, 0.02); // cut notes that are already queued
   setTimeout(() => gain.disconnect(), 600);
 }
 
-function setMusicWanted(wanted) {
+function setMusicWanted(wanted, withVinyl = false) {
   musicWanted = wanted;
-  if (wanted) startMusic();
+  if (wanted) startMusic(withVinyl);
   else stopMusic();
 }
 
@@ -637,7 +782,7 @@ function openPresent(button, index) {
 }
 
 function startRound(newRound) {
-  setMusicWanted(true); // the music starts with the game, and comes back after a scare
+  setMusicWanted(true, newRound === 0); // the music starts with the game (with the vinyl crackle first), and comes back after a scare
   clearTimeout(botTimer);
   round = newRound;
   presentsEl.innerHTML = '';
