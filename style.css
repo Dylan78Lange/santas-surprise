@@ -75,7 +75,18 @@ body {
   50% { transform: translate(-50%, calc(-50% - 3vh)) rotate(6deg); }
 }
 
-#homeButtons {
+#mode {
+  width: min(90vw, 460px);
+  text-align: center;
+}
+
+#mode h2 {
+  margin: 0 0 18px;
+  color: #ffcf6e;
+  font-size: 1.8rem;
+}
+
+#homeButtons, #modeButtons {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -83,7 +94,7 @@ body {
   margin-top: 14px;
 }
 
-#play, #playBot {
+#play, #playFriend, #playBot {
   padding: 12px 22px;
   font: inherit;
   font-size: 1.1rem;
@@ -92,6 +103,11 @@ body {
   border: none;
   border-radius: 8px;
   cursor: pointer;
+}
+
+#play {
+  padding: 12px 40px;
+  font-size: 1.3rem;
 }
 
 #warning {

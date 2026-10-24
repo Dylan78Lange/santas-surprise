@@ -515,15 +515,19 @@ CHARACTERS.forEach((character, i) => {
   document.getElementById('homeCharacters').appendChild(img);
 });
 
-function startFromHome(withBot) {
+function chooseMode(withBot) {
   vsBot = withBot;
   prepareAudio(); // a click is needed before a browser lets the scare sound play
-  document.getElementById('home').hidden = true;
+  document.getElementById('mode').hidden = true;
   document.getElementById('warning').hidden = false;
 }
 
-document.getElementById('play').onclick = () => startFromHome(false);
-document.getElementById('playBot').onclick = () => startFromHome(true);
+document.getElementById('play').onclick = () => {
+  document.getElementById('home').hidden = true;
+  document.getElementById('mode').hidden = false;
+};
+document.getElementById('playFriend').onclick = () => chooseMode(false);
+document.getElementById('playBot').onclick = () => chooseMode(true);
 
 document.getElementById('warningContinue').onclick = () => {
   document.getElementById('warning').hidden = true;
