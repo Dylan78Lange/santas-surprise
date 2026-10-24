@@ -1,5 +1,5 @@
 const PRESENT_IMAGES = ['present.jpeg', 'present2.jpeg', 'present3.jpeg', 'present4.jpeg'];
-const PRESENT_COUNT = 12;
+const PRESENT_COUNT = 16;
 const JOKE_CHANCE = 0.5;
 const NORMAL_ROUNDS = 3;
 const SUDDEN_DEATH = NORMAL_ROUNDS;

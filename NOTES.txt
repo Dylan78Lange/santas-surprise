@@ -16,7 +16,7 @@ Santa Claus, an elf, a gingerbread man, a snowman, the Grinch, Rudolph
 
 RULES
 -----
-- 12 presents in a normal round.
+- 16 presents in each round (was 12; changed to 16 in a 4x4 grid).
 - 3 rounds.
 - Players take turns. Player 1 goes first in round 1, Player 2 in round 2,
   Player 1 in round 3.
@@ -63,7 +63,7 @@ JOKES (15, shown on some safe presents at random)
 
 BUILD ORDER
 -----------
-1. Row of present buttons ............ DONE (4x3 grid, 12 presents)
+1. Row of present buttons ............ DONE (grid of presents; now 4x4 = 16)
 2. Random bomb + "You are safe!" joke .. DONE (1 in 2 joke chance, no repeats
    in a round; bomb currently just shows the word "BOMB!" as a placeholder)
 3. Turns and points .................. DONE (Player 1 / Player 2 names for now;
