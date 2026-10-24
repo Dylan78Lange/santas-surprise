@@ -87,7 +87,16 @@ BUILD ORDER
    Image is cropped to fill the screen, so a wide picture loses its sides on a
    tall phone screen. Plays in sudden death too; NOT on the "one present left"
    point, since nobody opens a bomb there.)
-7. Spin-the-wheel for sudden death (build last)
+7. Spin-the-wheel for sudden death ... DONE (after a tied round 3 a "Spin the
+   wheel" button opens the wheel screen: 8 small slices alternating red
+   (player 1) / green (player 2) with each player's character picture, and a
+   Spin button. The game picks the winner at random first, then animates the
+   wheel to land on one of the winner's slices (about 4 seconds). Then it says
+   "<name> goes first!" and a "Start sudden death" button begins the round.)
+
+NEW IMAGES (not used yet): ghoulelf.jpeg, ghoulreindeer.jpeg, ghoulsanta.jpeg,
+ghoulsnowman.jpeg - Dylan's jump-scare pictures. Waiting for Dylan to decide
+how they are used (see open questions).
 
 FILES
 -----

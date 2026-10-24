@@ -6,6 +6,10 @@ const SUDDEN_DEATH = NORMAL_ROUNDS;
 const GHOUL_IMAGE = 'ghoul.jpeg';
 const SCARE_MS = 2000;
 const SCARE_VOLUME = 0.7;
+const WHEEL_SLICES = 8;
+const WHEEL_SPINS = 5;
+const WHEEL_MS = 4000;
+const WHEEL_COLORS = ['#b3202a', '#1f7a3a'];
 
 const JOKES = [
   'What do snowmen eat for breakfast? Frosted Flakes.',
@@ -36,6 +40,13 @@ const CHARACTERS = [
 const selectEl = document.getElementById('select');
 const selectTitleEl = document.getElementById('selectTitle');
 const charactersEl = document.getElementById('characters');
+const wheelScreenEl = document.getElementById('wheelScreen');
+const wheelTitleEl = document.getElementById('wheelTitle');
+const wheelCanvas = document.getElementById('wheel');
+const wheelLegendEl = document.getElementById('wheelLegend');
+const wheelResultEl = document.getElementById('wheelResult');
+const spinEl = document.getElementById('spin');
+const startSuddenDeathEl = document.getElementById('startSuddenDeath');
 const gameEl = document.getElementById('game');
 const presentsEl = document.getElementById('presents');
 const messageEl = document.getElementById('message');
@@ -124,6 +135,106 @@ let currentPlayer;
 let gameOver;
 let scores;
 let chosen = [null, null];
+let suddenDeathFirst = 0;
+let wheelTimer;
+
+// Picks which player wins the spin, then works out how far to turn the wheel
+// so the pointer at the top ends on one of that player's slices.
+function computeSpin(winner) {
+  const sliceDegrees = 360 / WHEEL_SLICES;
+  const slices = [];
+  for (let i = 0; i < WHEEL_SLICES; i++) {
+    if (i % 2 === winner) slices.push(i);
+  }
+  const slice = slices[Math.floor(Math.random() * slices.length)];
+  const angle = slice * sliceDegrees + 6 + Math.random() * (sliceDegrees - 12);
+  return WHEEL_SPINS * 360 + (360 - angle);
+}
+
+function drawWheel() {
+  const context = wheelCanvas.getContext('2d');
+  const size = wheelCanvas.width;
+  const center = size / 2;
+  const radius = center - 6;
+  const sliceAngle = (Math.PI * 2) / WHEEL_SLICES;
+
+  context.clearRect(0, 0, size, size);
+  for (let i = 0; i < WHEEL_SLICES; i++) {
+    const start = -Math.PI / 2 + i * sliceAngle;
+    context.beginPath();
+    context.moveTo(center, center);
+    context.arc(center, center, radius, start, start + sliceAngle);
+    context.closePath();
+    context.fillStyle = WHEEL_COLORS[i % 2];
+    context.fill();
+    context.lineWidth = 4;
+    context.strokeStyle = '#fff';
+    context.stroke();
+  }
+
+  chosen.forEach((character, player) => {
+    const img = new Image();
+    img.onload = () => {
+      const avatar = radius * 0.32;
+      for (let i = player; i < WHEEL_SLICES; i += 2) {
+        const middle = -Math.PI / 2 + (i + 0.5) * sliceAngle;
+        context.save();
+        context.translate(center + Math.cos(middle) * radius * 0.68, center + Math.sin(middle) * radius * 0.68);
+        context.rotate(middle + Math.PI / 2);
+        context.beginPath();
+        context.arc(0, 0, avatar / 2, 0, Math.PI * 2);
+        context.clip();
+        context.drawImage(img, -avatar / 2, -avatar / 2, avatar, avatar);
+        context.restore();
+      }
+    };
+    img.src = character.image;
+  });
+}
+
+function showWheel() {
+  clearTimeout(wheelTimer);
+  gameEl.hidden = true;
+  wheelScreenEl.hidden = false;
+  wheelTitleEl.textContent = 'Spin the wheel to see who goes first in sudden death';
+  wheelLegendEl.textContent = '';
+  [0, 1].forEach(player => {
+    const part = document.createElement('span');
+    part.textContent = playerName(player);
+    part.style.color = player === 0 ? '#ff6b6b' : '#6bdc8b';
+    if (player === 1) wheelLegendEl.append('   ');
+    wheelLegendEl.appendChild(part);
+  });
+  wheelResultEl.textContent = '';
+  startSuddenDeathEl.hidden = true;
+  spinEl.hidden = false;
+  spinEl.disabled = false;
+  wheelCanvas.style.transition = 'none';
+  wheelCanvas.style.transform = 'rotate(0deg)';
+  drawWheel();
+}
+
+function spinWheel() {
+  spinEl.disabled = true;
+  const winner = Math.floor(Math.random() * 2);
+  const rotation = computeSpin(winner);
+  wheelCanvas.getBoundingClientRect(); // make the browser apply the reset before turning
+  wheelCanvas.style.transition = 'transform ' + WHEEL_MS + 'ms cubic-bezier(0.12, 0.6, 0.1, 1)';
+  wheelCanvas.style.transform = 'rotate(' + rotation + 'deg)';
+  wheelTimer = setTimeout(() => {
+    suddenDeathFirst = winner;
+    wheelResultEl.textContent = playerName(winner) + ' goes first!';
+    spinEl.hidden = true;
+    startSuddenDeathEl.hidden = false;
+  }, WHEEL_MS + 150);
+}
+
+spinEl.onclick = spinWheel;
+startSuddenDeathEl.onclick = () => {
+  wheelScreenEl.hidden = true;
+  gameEl.hidden = false;
+  startRound(SUDDEN_DEATH);
+};
 
 function playerName(player) {
   const character = chosen[player];
@@ -134,6 +245,8 @@ function playerName(player) {
 
 function showSelect(player) {
   gameEl.hidden = true;
+  wheelScreenEl.hidden = true;
+  clearTimeout(wheelTimer);
   selectEl.hidden = false;
   selectTitleEl.textContent = 'Player ' + (player + 1) + ', choose your character';
   charactersEl.innerHTML = '';
@@ -199,7 +312,7 @@ function showAction(label, onClick) {
 }
 
 function firstPlayerOfRound() {
-  if (round === SUDDEN_DEATH) return Math.floor(Math.random() * 2); // placeholder until the wheel is built
+  if (round === SUDDEN_DEATH) return suddenDeathFirst;
   return round % 2;
 }
 
@@ -228,7 +341,7 @@ function endRound(bombOpener) {
     showAction('Next round', () => startRound(round + 1));
   } else if (scores[0] === scores[1]) {
     messageEl.textContent += " It's a tie! Time for sudden death.";
-    showAction('Start sudden death', () => startRound(SUDDEN_DEATH));
+    showAction('Spin the wheel', showWheel);
   } else {
     gameOver = true;
     const winner = scores[0] > scores[1] ? 0 : 1;
