@@ -48,18 +48,35 @@ body {
   object-fit: contain;
 }
 
+#home {
+  position: relative;
+  z-index: 1;
+}
+
 #homeCharacters {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 14px;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 #homeCharacters img {
-  width: min(12vw, 9vh);
+  position: absolute;
+  width: min(18vw, 18vh);
   aspect-ratio: 1;
   object-fit: contain;
+  transform: translate(-50%, -50%);
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(-50%, -50%) rotate(-6deg); }
+  50% { transform: translate(-50%, calc(-50% - 3vh)) rotate(6deg); }
+}
+
+#play {
+  margin-top: 14px;
 }
 
 #play {

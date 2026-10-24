@@ -457,10 +457,17 @@ function startGame() {
   showSelect(0);
 }
 
-CHARACTERS.forEach(character => {
+// where each home screen character floats (left %, top %), in CHARACTERS order
+const HOME_POSITIONS = [[14, 14], [86, 12], [8, 48], [92, 52], [22, 88], [78, 88]];
+
+CHARACTERS.forEach((character, i) => {
   const img = document.createElement('img');
   img.src = character.image;
   img.alt = character.name;
+  img.style.left = HOME_POSITIONS[i][0] + '%';
+  img.style.top = HOME_POSITIONS[i][1] + '%';
+  img.style.animationDuration = 4 + (i % 3) + 's';
+  img.style.animationDelay = '-' + i * 0.9 + 's';
   document.getElementById('homeCharacters').appendChild(img);
 });
 

@@ -150,8 +150,10 @@ WARNING SCREEN + SECURITY (added after publishing)
 HOME SCREEN (added after the warning screen)
 --------------------------------------------
 Game title is now "Santa's Surprise" (also the browser tab title). The first
-screen is a home screen: the title, a present picture (present.jpeg), the six
-character pictures in a row, and a Play button. Order is now:
+screen is a home screen: the title, a present picture (present.jpeg) and a Play
+button in the middle, with the six character pictures (one each) floating
+slowly around the whole screen behind them (positions in HOME_POSITIONS in
+game.js; the float animation is in style.css). Order is now:
   Home -> Warning -> Character select -> Name -> Game.
 "Play again" after a game goes straight to character select (skips home and
 the warning).
