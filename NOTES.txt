@@ -78,12 +78,10 @@ BUILD ORDER
    everywhere and its picture shows next to the score. If both pick the same
    one the names get " 1" / " 2". Character select shows again on Play again.
    Characters don't have any special power.)
-6. Jump scare ........................ DONE, WAITING FOR DYLAN'S GHOUL IMAGE
-   (full screen the instant the bomb opens, shakes and flashes red for 2
-   seconds, then the round result shows. Sound is a scream + thump made in
-   code (no file), volume SCARE_VOLUME in game.js. The picture is expected at
-   ghoul.jpeg; change GHOUL_IMAGE at the top of game.js if the file has another
-   name. Until the file exists the scare shows a flashing red screen.
+6. Jump scare ........................ DONE (full screen the instant the bomb
+   opens, shakes and flashes red for 2 seconds, then the round result shows.
+   Sound is a scream + thump made in code (no file), volume SCARE_VOLUME in
+   game.js. A random one of the 4 scare pictures is used each time.
    Image is cropped to fill the screen, so a wide picture loses its sides on a
    tall phone screen. Plays in sudden death too; NOT on the "one present left"
    point, since nobody opens a bomb there.)
@@ -94,9 +92,10 @@ BUILD ORDER
    wheel to land on one of the winner's slices (about 4 seconds). Then it says
    "<name> goes first!" and a "Start sudden death" button begins the round.)
 
-NEW IMAGES (not used yet): ghoulelf.jpeg, ghoulreindeer.jpeg, ghoulsanta.jpeg,
-ghoulsnowman.jpeg - Dylan's jump-scare pictures. Waiting for Dylan to decide
-how they are used (see open questions).
+SCARE IMAGES: ghoulelf.jpeg, ghoulreindeer.jpeg, ghoulsanta.jpeg,
+ghoulsnowman.jpeg (2752x1536 each, about 3 MB). Each jump scare picks one at
+random (list GHOUL_IMAGES at the top of game.js; all four are loaded ahead of
+time). This replaces the single ghoul.jpeg from step 6.
 
 FILES
 -----

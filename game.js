@@ -3,7 +3,7 @@ const PRESENT_COUNT = 12;
 const JOKE_CHANCE = 0.5;
 const NORMAL_ROUNDS = 3;
 const SUDDEN_DEATH = NORMAL_ROUNDS;
-const GHOUL_IMAGE = 'ghoul.jpeg';
+const GHOUL_IMAGES = ['ghoulelf.jpeg', 'ghoulreindeer.jpeg', 'ghoulsanta.jpeg', 'ghoulsnowman.jpeg'];
 const SCARE_MS = 2000;
 const SCARE_VOLUME = 0.7;
 const WHEEL_SLICES = 8;
@@ -59,7 +59,9 @@ const scareImgEl = document.getElementById('scareImg');
 scareImgEl.onerror = () => {
   scareImgEl.hidden = true;
 };
-scareImgEl.src = GHOUL_IMAGE;
+GHOUL_IMAGES.forEach(file => {
+  new Image().src = file; // load them ahead of time so the scare appears instantly
+});
 
 let audioContext;
 let scareTimer;
@@ -119,6 +121,8 @@ function playScareSound() {
 
 function playJumpScare() {
   clearTimeout(scareTimer);
+  scareImgEl.hidden = false;
+  scareImgEl.src = GHOUL_IMAGES[Math.floor(Math.random() * GHOUL_IMAGES.length)];
   scareEl.hidden = false;
   playScareSound();
   scareTimer = setTimeout(() => {
