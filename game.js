@@ -410,7 +410,7 @@ function endRound(bombOpener) {
     gameOver = true;
     const winner = 1 - bombOpener;
     messageEl.textContent += ' ' + playerName(winner) + ' wins!';
-    showAction('Play again', startGame);
+    showAction('Play again', showMode);
   } else if (round < NORMAL_ROUNDS - 1) {
     showAction('Next round', () => startRound(round + 1));
   } else if (scores[0] === scores[1]) {
@@ -420,7 +420,7 @@ function endRound(bombOpener) {
     gameOver = true;
     const winner = scores[0] > scores[1] ? 0 : 1;
     messageEl.textContent += ' ' + playerName(winner) + ' wins the game!';
-    showAction('Play again', startGame);
+    showAction('Play again', showMode);
   }
 }
 
@@ -515,21 +515,39 @@ CHARACTERS.forEach((character, i) => {
   document.getElementById('homeCharacters').appendChild(img);
 });
 
+let warningSeen = false;
+
+// asks "friend or bot?" again, for example after a game ends
+function showMode() {
+  clearTimeout(botTimer);
+  clearTimeout(wheelTimer);
+  gameEl.hidden = true;
+  wheelScreenEl.hidden = true;
+  selectEl.hidden = true;
+  nameScreenEl.hidden = true;
+  document.getElementById('mode').hidden = false;
+}
+
 function chooseMode(withBot) {
   vsBot = withBot;
   prepareAudio(); // a click is needed before a browser lets the scare sound play
   document.getElementById('mode').hidden = true;
-  document.getElementById('warning').hidden = false;
+  if (warningSeen) {
+    startGame();
+  } else {
+    document.getElementById('warning').hidden = false;
+  }
 }
 
 document.getElementById('play').onclick = () => {
   document.getElementById('home').hidden = true;
-  document.getElementById('mode').hidden = false;
+  showMode();
 };
 document.getElementById('playFriend').onclick = () => chooseMode(false);
 document.getElementById('playBot').onclick = () => chooseMode(true);
 
 document.getElementById('warningContinue').onclick = () => {
+  warningSeen = true;
   document.getElementById('warning').hidden = true;
   startGame();
 };

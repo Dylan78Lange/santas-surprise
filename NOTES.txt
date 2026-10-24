@@ -173,4 +173,6 @@ bomb, the jump scare still plays and you get the point. Rounds, scoring, the
 "Play again" keeps the same mode (bot or friend).
 
 Screen order now: Home (Play) -> Mode (friend or bot) -> Warning -> Character
-select -> Name -> Game. "Play again" goes straight to character select.
+select -> Name -> Game. After a game, "Play again" goes back to the Mode screen
+("How do you want to play?"), so players can switch between a friend and the
+bot. The warning only shows the first time (after that it is skipped).
