@@ -41,6 +41,11 @@ const CHARACTERS = [
 const selectEl = document.getElementById('select');
 const selectTitleEl = document.getElementById('selectTitle');
 const charactersEl = document.getElementById('characters');
+const nameScreenEl = document.getElementById('nameScreen');
+const namePicEl = document.getElementById('namePic');
+const nameTitleEl = document.getElementById('nameTitle');
+const nameInputEl = document.getElementById('nameInput');
+const nameContinueEl = document.getElementById('nameContinue');
 const wheelScreenEl = document.getElementById('wheelScreen');
 const wheelTitleEl = document.getElementById('wheelTitle');
 const wheelCanvas = document.getElementById('wheel');
@@ -140,6 +145,7 @@ let currentPlayer;
 let gameOver;
 let scores;
 let chosen = [null, null];
+let names = [null, null];
 let suddenDeathFirst = 0;
 let wheelTimer;
 
@@ -243,14 +249,52 @@ startSuddenDeathEl.onclick = () => {
 
 function playerName(player) {
   const character = chosen[player];
-  if (!character) return 'Player ' + (player + 1);
-  if (chosen[0] === chosen[1]) return character.name + ' ' + (player + 1);
-  return character.name;
+  const name = names[player];
+  if (!character || !name) return 'Player ' + (player + 1);
+  const label = name + ' (' + character.name + ')';
+  const other = 1 - player;
+  if (chosen[other] && names[other] && label === names[other] + ' (' + chosen[other].name + ')') {
+    return name + ' ' + (player + 1) + ' (' + character.name + ')';
+  }
+  return label;
 }
+
+function showName(player, character) {
+  selectEl.hidden = true;
+  nameScreenEl.hidden = false;
+  namePicEl.src = character.image;
+  namePicEl.alt = character.name;
+  nameTitleEl.textContent = 'Player ' + (player + 1) + ', what is your name?';
+  nameInputEl.value = '';
+  nameContinueEl.disabled = true;
+  nameInputEl.focus();
+  nameContinueEl.onclick = () => {
+    const typed = nameInputEl.value.trim();
+    if (!typed) return;
+    chosen[player] = character;
+    names[player] = typed;
+    nameScreenEl.hidden = true;
+    if (player === 0) {
+      showSelect(1);
+    } else {
+      gameEl.hidden = false;
+      startRound(0);
+    }
+  };
+}
+
+nameInputEl.addEventListener('input', () => {
+  nameContinueEl.disabled = nameInputEl.value.trim() === '';
+});
+
+nameInputEl.addEventListener('keydown', event => {
+  if (event.key === 'Enter' && !nameContinueEl.disabled) nameContinueEl.click();
+});
 
 function showSelect(player) {
   gameEl.hidden = true;
   wheelScreenEl.hidden = true;
+  nameScreenEl.hidden = true;
   clearTimeout(wheelTimer);
   selectEl.hidden = false;
   selectTitleEl.textContent = 'Player ' + (player + 1) + ', choose your character';
@@ -259,7 +303,7 @@ function showSelect(player) {
   CHARACTERS.forEach(character => {
     const button = document.createElement('button');
     button.className = 'character';
-    button.addEventListener('click', () => chooseCharacter(player, character));
+    button.addEventListener('click', () => showName(player, character));
 
     const img = document.createElement('img');
     img.src = character.image;
@@ -272,17 +316,6 @@ function showSelect(player) {
     button.appendChild(label);
     charactersEl.appendChild(button);
   });
-}
-
-function chooseCharacter(player, character) {
-  chosen[player] = character;
-  if (player === 0) {
-    showSelect(1);
-  } else {
-    selectEl.hidden = true;
-    gameEl.hidden = false;
-    startRound(0);
-  }
 }
 
 function roundLabel() {
@@ -420,6 +453,7 @@ function startGame() {
   scores = [0, 0];
   gameOver = false;
   chosen = [null, null];
+  names = [null, null];
   showSelect(0);
 }
 
