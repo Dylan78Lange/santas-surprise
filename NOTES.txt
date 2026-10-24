@@ -68,7 +68,11 @@ BUILD ORDER
 3. Turns and points .................. DONE (Player 1 / Player 2 names for now;
    score and whose turn shown above the presents; round locks when it ends,
    by the bomb or by one present left; no next round starts yet)
-4. 3 rounds, then sudden death on a tie
+4. 3 rounds, then sudden death on a tie . DONE (a "Next round" button after
+   rounds 1-2; after round 3 the higher score wins, or a tie shows "Start
+   sudden death"; a "Play again" button after the game. In sudden death there
+   is no skip rule, the bomb opener loses, scores don't change. Who goes first
+   in sudden death is a RANDOM PLACEHOLDER until the wheel (step 7) is built.)
 5. Character select
 6. Jump scare (picture + loud sound; sound must start after a click, browsers
    block audio before that)

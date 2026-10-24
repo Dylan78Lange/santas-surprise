@@ -30,6 +30,23 @@ body {
   font-size: 1.2rem;
 }
 
+#action {
+  display: block;
+  margin: 0 auto 14px;
+  padding: 10px 22px;
+  font: inherit;
+  font-size: 1.05rem;
+  color: #fff;
+  background: #b3202a;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#action[hidden] {
+  display: none;
+}
+
 #presents {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

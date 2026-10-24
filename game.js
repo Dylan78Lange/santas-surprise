@@ -1,6 +1,8 @@
 const PRESENT_IMAGES = ['present.jpeg', 'present2.jpeg', 'present3.jpeg', 'present4.jpeg'];
 const PRESENT_COUNT = 12;
 const JOKE_CHANCE = 0.5;
+const NORMAL_ROUNDS = 3;
+const SUDDEN_DEATH = NORMAL_ROUNDS;
 
 const JOKES = [
   'What do snowmen eat for breakfast? Frosted Flakes.',
@@ -24,30 +26,40 @@ const presentsEl = document.getElementById('presents');
 const messageEl = document.getElementById('message');
 const turnEl = document.getElementById('turn');
 const scoreEl = document.getElementById('score');
+const actionEl = document.getElementById('action');
 
-let round = 0;
+let round;
 let bombIndex;
 let jokesLeft;
 let openedCount;
 let roundOver;
 let currentPlayer;
-const scores = [0, 0];
+let gameOver;
+let scores;
 
 function playerName(player) {
   return 'Player ' + (player + 1);
 }
 
-function updateStatus() {
-  scoreEl.textContent = playerName(0) + ': ' + scores[0] + '   ' + playerName(1) + ': ' + scores[1];
-  turnEl.textContent = roundOver ? 'Round over' : playerName(currentPlayer) + "'s turn";
+function roundLabel() {
+  return round === SUDDEN_DEATH ? 'Sudden death' : 'Round ' + (round + 1) + ' of ' + NORMAL_ROUNDS;
 }
 
-function endRound() {
-  roundOver = true;
-  document.querySelectorAll('.present').forEach(button => {
-    button.disabled = true;
-  });
-  updateStatus();
+function updateStatus() {
+  scoreEl.textContent = playerName(0) + ': ' + scores[0] + '   ' + playerName(1) + ': ' + scores[1];
+  const turn = roundOver ? 'Round over' : playerName(currentPlayer) + "'s turn";
+  turnEl.textContent = roundLabel() + ' · ' + turn;
+}
+
+function showAction(label, onClick) {
+  actionEl.textContent = label;
+  actionEl.onclick = onClick;
+  actionEl.hidden = false;
+}
+
+function firstPlayerOfRound() {
+  if (round === SUDDEN_DEATH) return Math.floor(Math.random() * 2); // placeholder until the wheel is built
+  return round % 2;
 }
 
 function shuffle(list) {
@@ -59,6 +71,31 @@ function shuffle(list) {
   return copy;
 }
 
+function endRound(bombOpener) {
+  roundOver = true;
+  document.querySelectorAll('.present').forEach(button => {
+    button.disabled = true;
+  });
+  updateStatus();
+
+  if (round === SUDDEN_DEATH) {
+    gameOver = true;
+    const winner = 1 - bombOpener;
+    messageEl.textContent += ' ' + playerName(winner) + ' wins!';
+    showAction('Play again', startGame);
+  } else if (round < NORMAL_ROUNDS - 1) {
+    showAction('Next round', () => startRound(round + 1));
+  } else if (scores[0] === scores[1]) {
+    messageEl.textContent += " It's a tie! Time for sudden death.";
+    showAction('Start sudden death', () => startRound(SUDDEN_DEATH));
+  } else {
+    gameOver = true;
+    const winner = scores[0] > scores[1] ? 0 : 1;
+    messageEl.textContent += ' ' + playerName(winner) + ' wins the game!';
+    showAction('Play again', startGame);
+  }
+}
+
 function openPresent(button, index) {
   if (roundOver) return;
 
@@ -68,9 +105,9 @@ function openPresent(button, index) {
 
   if (index === bombIndex) {
     const other = 1 - currentPlayer;
-    scores[other]++;
-    messageEl.textContent = 'BOMB! ' + playerName(other) + ' gets a point.';
-    endRound();
+    if (round !== SUDDEN_DEATH) scores[other]++;
+    messageEl.textContent = 'BOMB!' + (round === SUDDEN_DEATH ? '' : ' ' + playerName(other) + ' gets a point.');
+    endRound(currentPlayer);
     return;
   }
 
@@ -79,12 +116,12 @@ function openPresent(button, index) {
     text += ' ' + jokesLeft.pop();
   }
 
-  if (PRESENT_COUNT - openedCount === 1) {
+  if (round !== SUDDEN_DEATH && PRESENT_COUNT - openedCount === 1) {
     scores[0]++;
     scores[1]++;
     text += ' Only one present left, so both players get a point.';
     messageEl.textContent = text;
-    endRound();
+    endRound(null);
     return;
   }
 
@@ -93,14 +130,16 @@ function openPresent(button, index) {
   updateStatus();
 }
 
-function showPresents() {
+function startRound(newRound) {
+  round = newRound;
   presentsEl.innerHTML = '';
   messageEl.textContent = '';
+  actionEl.hidden = true;
   bombIndex = Math.floor(Math.random() * PRESENT_COUNT);
   jokesLeft = shuffle(JOKES);
   openedCount = 0;
   roundOver = false;
-  currentPlayer = 0;
+  currentPlayer = firstPlayerOfRound();
   updateStatus();
 
   for (let i = 0; i < PRESENT_COUNT; i++) {
@@ -117,4 +156,10 @@ function showPresents() {
   }
 }
 
-showPresents();
+function startGame() {
+  scores = [0, 0];
+  gameOver = false;
+  startRound(0);
+}
+
+startGame();
