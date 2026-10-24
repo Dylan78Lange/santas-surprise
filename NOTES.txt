@@ -78,8 +78,15 @@ BUILD ORDER
    everywhere and its picture shows next to the score. If both pick the same
    one the names get " 1" / " 2". Character select shows again on Play again.
    Characters don't have any special power.)
-6. Jump scare (picture + loud sound; sound must start after a click, browsers
-   block audio before that)
+6. Jump scare ........................ DONE, WAITING FOR DYLAN'S GHOUL IMAGE
+   (full screen the instant the bomb opens, shakes and flashes red for 2
+   seconds, then the round result shows. Sound is a scream + thump made in
+   code (no file), volume SCARE_VOLUME in game.js. The picture is expected at
+   ghoul.jpeg; change GHOUL_IMAGE at the top of game.js if the file has another
+   name. Until the file exists the scare shows a flashing red screen.
+   Image is cropped to fill the screen, so a wide picture loses its sides on a
+   tall phone screen. Plays in sudden death too; NOT on the "one present left"
+   point, since nobody opens a bomb there.)
 7. Spin-the-wheel for sudden death (build last)
 
 FILES

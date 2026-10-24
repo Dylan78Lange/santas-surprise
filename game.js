@@ -3,6 +3,9 @@ const PRESENT_COUNT = 12;
 const JOKE_CHANCE = 0.5;
 const NORMAL_ROUNDS = 3;
 const SUDDEN_DEATH = NORMAL_ROUNDS;
+const GHOUL_IMAGE = 'ghoul.jpeg';
+const SCARE_MS = 2000;
+const SCARE_VOLUME = 0.7;
 
 const JOKES = [
   'What do snowmen eat for breakfast? Frosted Flakes.',
@@ -39,6 +42,78 @@ const messageEl = document.getElementById('message');
 const turnEl = document.getElementById('turn');
 const scoreEl = document.getElementById('score');
 const actionEl = document.getElementById('action');
+const scareEl = document.getElementById('scare');
+const scareImgEl = document.getElementById('scareImg');
+
+scareImgEl.onerror = () => {
+  scareImgEl.hidden = true;
+};
+scareImgEl.src = GHOUL_IMAGE;
+
+let audioContext;
+let scareTimer;
+
+function playScareSound() {
+  try {
+    audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioContext.state === 'suspended') audioContext.resume();
+    const now = audioContext.currentTime;
+    const length = 1.8;
+
+    const master = audioContext.createGain();
+    master.gain.value = SCARE_VOLUME;
+
+    const distortion = audioContext.createWaveShaper();
+    const curve = new Float32Array(256);
+    for (let i = 0; i < 256; i++) curve[i] = Math.tanh((i / 128 - 1) * 4);
+    distortion.curve = curve;
+    distortion.connect(master);
+    master.connect(audioContext.destination);
+
+    // harsh noise burst
+    const buffer = audioContext.createBuffer(1, audioContext.sampleRate * length, audioContext.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+    const noise = audioContext.createBufferSource();
+    noise.buffer = buffer;
+    const highpass = audioContext.createBiquadFilter();
+    highpass.type = 'highpass';
+    highpass.frequency.value = 3000;
+    const noiseGain = audioContext.createGain();
+    noiseGain.gain.setValueAtTime(1, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + length);
+    noise.connect(highpass);
+    highpass.connect(noiseGain);
+    noiseGain.connect(distortion);
+    noise.start(now);
+
+    // screams and a low thump
+    [['sawtooth', 300, 1500], ['square', 220, 950], ['sawtooth', 90, 40]].forEach(([type, from, to]) => {
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(from, now);
+      osc.frequency.exponentialRampToValueAtTime(to, now + length);
+      gain.gain.setValueAtTime(0.8, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + length);
+      osc.connect(gain);
+      gain.connect(distortion);
+      osc.start(now);
+      osc.stop(now + length);
+    });
+  } catch (error) {
+    // no sound available, the picture still shows
+  }
+}
+
+function playJumpScare() {
+  clearTimeout(scareTimer);
+  scareEl.hidden = false;
+  playScareSound();
+  scareTimer = setTimeout(() => {
+    scareEl.hidden = true;
+  }, SCARE_MS);
+}
 
 let round;
 let bombIndex;
@@ -170,6 +245,7 @@ function openPresent(button, index) {
   openedCount++;
 
   if (index === bombIndex) {
+    playJumpScare();
     const other = 1 - currentPlayer;
     if (round !== SUDDEN_DEATH) scores[other]++;
     messageEl.textContent = 'BOMB!' + (round === SUDDEN_DEATH ? '' : ' ' + playerName(other) + ' gets a point.');
