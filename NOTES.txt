@@ -124,3 +124,12 @@ OPEN QUESTIONS
   (the last present is skipped); even numbers are fairer in sudden death. Dylan
   chose 12, so this is just something to watch when playtesting.
 - Does the chosen character do anything in the game?
+
+ONLINE
+------
+Repo (public): https://github.com/Dylan78Lange/santas-surprise
+Play online:   https://dylan78lange.github.io/santas-surprise/
+Published with GitHub Pages from the main branch (root). To update the online
+game, commit changes and run `git push`; the site rebuilds in about a minute
+(use Cmd+Shift+R to see the new version). File names must match exactly,
+including capital letters, because GitHub's servers care about them.
