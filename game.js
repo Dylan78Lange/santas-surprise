@@ -72,10 +72,18 @@ GHOUL_IMAGES.forEach(file => {
 let audioContext;
 let scareTimer;
 
-function playScareSound() {
+function prepareAudio() {
   try {
     audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
     if (audioContext.state === 'suspended') audioContext.resume();
+  } catch (error) {
+    // no sound available
+  }
+}
+
+function playScareSound() {
+  try {
+    prepareAudio();
     const now = audioContext.currentTime;
     const length = 1.8;
 
@@ -147,6 +155,33 @@ let scores;
 let chosen = [null, null];
 let names = [null, null];
 let suddenDeathFirst = 0;
+
+const BOT_NAMES = ['Jingle-Bot', 'Tinsel', 'Sparky', 'Beepo', 'Frosty-Bot', 'Bolt'];
+let BOT_THINK_MS = 1500;
+let vsBot = false;
+let botTimer;
+
+function isBotTurn() {
+  return vsBot && currentPlayer === 1 && !roundOver;
+}
+
+// The bot is always player 2. It has no clue where the bomb is, so it just
+// picks a random present that is still there, after a short pause.
+function botTurn() {
+  clearTimeout(botTimer);
+  if (!isBotTurn()) return;
+  botTimer = setTimeout(() => {
+    if (!isBotTurn()) return;
+    const available = [...presentsEl.querySelectorAll('.present')].filter(button => !button.disabled);
+    const button = available[Math.floor(Math.random() * available.length)];
+    openPresent(button, Number(button.dataset.index));
+  }, BOT_THINK_MS);
+}
+
+function assignBot() {
+  chosen[1] = CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)];
+  names[1] = BOT_NAMES[Math.floor(Math.random() * BOT_NAMES.length)];
+}
 let wheelTimer;
 
 // Picks which player wins the spin, then works out how far to turn the wheel
@@ -264,7 +299,7 @@ function showName(player, character) {
   nameScreenEl.hidden = false;
   namePicEl.src = character.image;
   namePicEl.alt = character.name;
-  nameTitleEl.textContent = 'Player ' + (player + 1) + ', what is your name?';
+  nameTitleEl.textContent = vsBot ? 'What is your name?' : 'Player ' + (player + 1) + ', what is your name?';
   nameInputEl.value = '';
   nameContinueEl.disabled = true;
   nameInputEl.focus();
@@ -274,9 +309,10 @@ function showName(player, character) {
     chosen[player] = character;
     names[player] = typed;
     nameScreenEl.hidden = true;
-    if (player === 0) {
+    if (player === 0 && !vsBot) {
       showSelect(1);
     } else {
+      if (vsBot) assignBot();
       gameEl.hidden = false;
       startRound(0);
     }
@@ -297,7 +333,7 @@ function showSelect(player) {
   nameScreenEl.hidden = true;
   clearTimeout(wheelTimer);
   selectEl.hidden = false;
-  selectTitleEl.textContent = 'Player ' + (player + 1) + ', choose your character';
+  selectTitleEl.textContent = vsBot ? 'Choose your character' : 'Player ' + (player + 1) + ', choose your character';
   charactersEl.innerHTML = '';
 
   CHARACTERS.forEach(character => {
@@ -421,9 +457,11 @@ function openPresent(button, index) {
   messageEl.textContent = text;
   currentPlayer = 1 - currentPlayer;
   updateStatus();
+  botTurn();
 }
 
 function startRound(newRound) {
+  clearTimeout(botTimer);
   round = newRound;
   presentsEl.innerHTML = '';
   messageEl.textContent = '';
@@ -438,7 +476,11 @@ function startRound(newRound) {
   for (let i = 0; i < PRESENT_COUNT; i++) {
     const button = document.createElement('button');
     button.className = 'present';
-    button.addEventListener('click', () => openPresent(button, i));
+    button.dataset.index = i;
+    button.addEventListener('click', () => {
+      if (isBotTurn()) return; // wait for the bot to pick
+      openPresent(button, i);
+    });
 
     const img = document.createElement('img');
     img.src = PRESENT_IMAGES[round % PRESENT_IMAGES.length];
@@ -447,9 +489,11 @@ function startRound(newRound) {
     button.appendChild(img);
     presentsEl.appendChild(button);
   }
+  botTurn();
 }
 
 function startGame() {
+  clearTimeout(botTimer);
   scores = [0, 0];
   gameOver = false;
   chosen = [null, null];
@@ -471,10 +515,15 @@ CHARACTERS.forEach((character, i) => {
   document.getElementById('homeCharacters').appendChild(img);
 });
 
-document.getElementById('play').onclick = () => {
+function startFromHome(withBot) {
+  vsBot = withBot;
+  prepareAudio(); // a click is needed before a browser lets the scare sound play
   document.getElementById('home').hidden = true;
   document.getElementById('warning').hidden = false;
-};
+}
+
+document.getElementById('play').onclick = () => startFromHome(false);
+document.getElementById('playBot').onclick = () => startFromHome(true);
 
 document.getElementById('warningContinue').onclick = () => {
   document.getElementById('warning').hidden = true;

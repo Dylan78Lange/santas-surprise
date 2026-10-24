@@ -75,14 +75,18 @@ body {
   50% { transform: translate(-50%, calc(-50% - 3vh)) rotate(6deg); }
 }
 
-#play {
+#homeButtons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-top: 14px;
 }
 
-#play {
-  padding: 12px 40px;
+#play, #playBot {
+  padding: 12px 22px;
   font: inherit;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   color: #fff;
   background: #b3202a;
   border: none;

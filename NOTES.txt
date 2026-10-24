@@ -157,3 +157,16 @@ game.js; the float animation is in style.css). Order is now:
   Home -> Warning -> Character select -> Name -> Game.
 "Play again" after a game goes straight to character select (skips home and
 the warning).
+
+PLAY AGAINST THE BOT (added after the floating home screen)
+-----------------------------------------------------------
+The home screen has two buttons: "Play with a friend" (two players, as before)
+and "Play against the bot". With the bot, only one player picks a character and
+types a name; the bot is always Player 2 and gets a random character and a fun
+name (Jingle-Bot, Tinsel, Sparky, Beepo, Frosty-Bot, Bolt), shown like
+"Bolt (Grinch)". The bot has no clue where the bomb is: after a pause of about
+1.5 seconds (BOT_THINK_MS in game.js) it picks a random present that is still
+there. Your clicks are ignored while it is the bot's turn. If the bot opens the
+bomb, the jump scare still plays and you get the point. Rounds, scoring, the
+"one present left" rule and sudden death (with the wheel) all work the same.
+"Play again" keeps the same mode (bot or friend).
