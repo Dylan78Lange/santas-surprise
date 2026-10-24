@@ -782,7 +782,8 @@ function openPresent(button, index) {
 }
 
 function startRound(newRound) {
-  setMusicWanted(true, newRound === 0); // the music starts with the game (with the vinyl crackle first), and comes back after a scare
+  setMusicWanted(false); // every round starts the music again, even if it was still playing
+  setMusicWanted(true, true); // with a random vinyl crackle first
   clearTimeout(botTimer);
   round = newRound;
   presentsEl.innerHTML = '';

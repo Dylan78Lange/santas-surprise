@@ -223,10 +223,14 @@ but no reliable note source was found, so they are NOT in yet.
 Bug found while testing (fixed before publishing): note names with a flat (Bb)
 were not understood, which crashed the whole game script.
 
-Vinyl crackle: when a GAME STARTS (first round only, not after a scare, not on the
-next rounds) a random one of three vinyl "start crackle" sounds plays; the carols
-start 3 seconds later (VINYL_LEAD_SECONDS) and the crackle goes on softly under
-them until it ends. Files: vinylstart1.mp3, vinylstart2.mp3, vinylstart3.mp3 (small
+Vinyl crackle: at the start of EVERY round (round 1, 2, 3 and sudden death) a
+random one of three vinyl "start crackle" sounds plays; the carols start 3 seconds
+later (VINYL_LEAD_SECONDS) and the crackle goes on softly under them until it ends.
+The music restarts at every round, even if it was still playing from the round
+before (a round that ended without a scare). It does not play in the menus, and
+not while the speaker button is muted. (Dylan first wanted it only at the start of
+a game, then asked for every round.)
+Files: vinylstart1.mp3, vinylstart2.mp3, vinylstart3.mp3 (small
 MP3 versions of the WAVs in Dylan's downloaded crackle-sounds.zip). The sounds are
 by lulyc on Freesound, license CC BY 3.0, so they need credit: a credit line is on
 the home screen and the full credit is in CREDITS.txt. Keep both if the sounds stay.
