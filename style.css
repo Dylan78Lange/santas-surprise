@@ -11,10 +11,26 @@ body {
 
 #game {
   width: min(90vw, 760px);
+  height: 100vh;
+  height: 100dvh;
+  box-sizing: border-box;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#game[hidden] {
+  display: none;
+}
+
+#presentsArea {
+  flex: 1;
+  min-height: 0;
+  container-type: size;
 }
 
 #select {
-  width: min(90vw, 760px);
+  width: min(90vw, 760px, calc((100vh - 110px) * 1.5));
   text-align: center;
 }
 
@@ -115,7 +131,7 @@ body {
 
 #wheelBox {
   position: relative;
-  width: min(80vw, 420px);
+  width: min(80vw, 420px, calc(100vh - 300px));
   margin: 0 auto 12px;
 }
 
@@ -200,10 +216,10 @@ body {
 }
 
 #message {
-  min-height: 3.2em;
-  margin: 0 0 12px;
+  min-height: 2.8em;
+  margin: 0 0 8px;
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 #scare {
@@ -250,7 +266,7 @@ body {
 
 #action {
   display: block;
-  margin: 0 auto 14px;
+  margin: 0 auto 8px;
   padding: 10px 22px;
   font: inherit;
   font-size: 1.05rem;
@@ -268,7 +284,11 @@ body {
 #presents {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  grid-auto-rows: 1fr;
+  gap: 8px;
+  width: min(100cqw, 100cqh);
+  aspect-ratio: 1;
+  margin: 0 auto;
 }
 
 .present {
