@@ -453,16 +453,26 @@ startSuddenDeathEl.onclick = () => {
   startRound(SUDDEN_DEATH);
 };
 
-function playerName(player) {
+// A player who typed no name (or typed the character's own name) is shown as
+// just the character, like "Santa". A typed name is shown like "Sam (Santa)".
+function nameParts(player) {
   const character = chosen[player];
-  const name = names[player];
-  if (!character || !name) return 'Player ' + (player + 1);
-  const label = name + ' (' + character.name + ')';
+  const typed = (names[player] || '').trim();
+  const isDefault = !typed || typed.toLowerCase() === character.name.toLowerCase();
+  return { base: isDefault ? character.name : typed, suffix: isDefault ? '' : ' (' + character.name + ')' };
+}
+
+function playerName(player) {
+  if (!chosen[player]) return 'Player ' + (player + 1);
+  const mine = nameParts(player);
   const other = 1 - player;
-  if (chosen[other] && names[other] && label === names[other] + ' (' + chosen[other].name + ')') {
-    return name + ' ' + (player + 1) + ' (' + character.name + ')';
+  if (chosen[other]) {
+    const theirs = nameParts(other);
+    if (mine.base + mine.suffix === theirs.base + theirs.suffix) {
+      return mine.base + ' ' + (player + 1) + mine.suffix; // same name twice, so "Santa 1" and "Santa 2"
+    }
   }
-  return label;
+  return mine.base + mine.suffix;
 }
 
 function showName(player, character) {
@@ -472,13 +482,12 @@ function showName(player, character) {
   namePicEl.alt = character.name;
   nameTitleEl.textContent = vsBot ? 'What is your name?' : 'Player ' + (player + 1) + ', what is your name?';
   nameInputEl.value = '';
-  nameContinueEl.disabled = true;
+  nameInputEl.placeholder = 'Leave blank to be ' + character.name;
   nameInputEl.focus();
   nameContinueEl.onclick = () => {
-    const typed = nameInputEl.value.trim();
-    if (!typed) return;
     chosen[player] = character;
-    names[player] = typed;
+    names[player] = nameInputEl.value.trim(); // blank means the character's name is used
+
     nameScreenEl.hidden = true;
     if (player === 0 && !vsBot) {
       showSelect(1);
@@ -490,12 +499,8 @@ function showName(player, character) {
   };
 }
 
-nameInputEl.addEventListener('input', () => {
-  nameContinueEl.disabled = nameInputEl.value.trim() === '';
-});
-
 nameInputEl.addEventListener('keydown', event => {
-  if (event.key === 'Enter' && !nameContinueEl.disabled) nameContinueEl.click();
+  if (event.key === 'Enter') nameContinueEl.click();
 });
 
 function showSelect(player) {

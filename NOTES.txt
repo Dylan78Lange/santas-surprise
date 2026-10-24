@@ -93,10 +93,13 @@ BUILD ORDER
    wheel to land on one of the winner's slices (about 4 seconds). Then it says
    "<name> goes first!" and a "Start sudden death" button begins the round.)
 
-NAMES (added after step 7): after picking a character each player must type a
-name (up to 12 letters, can't be blank). It shows as "Sam (Santa)" everywhere:
-score, turn line, messages, wheel legend. If two players end up with the same
-name AND the same character, " 1" / " 2" is added to the name.
+NAMES (added after step 7, changed later): after picking a character each player
+can type a name (up to 12 letters). The name is OPTIONAL: if it is left blank (or
+only spaces, or the same as the character's name) the player is just called after
+their character, like "Santa" or "Elf". A typed name shows as "Sam (Santa)"
+everywhere: score, turn line, messages, wheel legend. If two players end up with
+exactly the same label (for example both blank and both Santa) " 1" / " 2" is
+added: "Santa 1" and "Santa 2". The name box says "Leave blank to be <character>".
 There is no "go back" button on the name screen yet.
 
 SCARE IMAGES: ghoulelf.jpeg, ghoulreindeer.jpeg, ghoulsanta.jpeg,
