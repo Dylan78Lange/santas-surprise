@@ -322,3 +322,7 @@ KIDS MODE, SOUNDS AND PRIZE COLLECTION (2026-10-26)
 - Stats: game-start and game-finish have style (kids/scary); new event
   collection-open {found}.
 - 3-4 player mode was planned but dropped (Dylan: not now).
+
+- The switch is now at the top of the home screen and says 👻 Normal / 🧸 Kids
+  ("Scary" renamed to "Normal"). Stats still send style "scary" for Normal so
+  the numbers stay comparable.

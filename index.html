@@ -6,23 +6,25 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cloud.umami.is; style-src 'self'; img-src 'self'; media-src 'self'; connect-src 'self' https://gateway.umami.is; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="no-referrer">
   <title>Santa's Surprise</title>
-  <link rel="stylesheet" href="style.css?v=20261026b">
+  <link rel="stylesheet" href="style.css?v=20261026d">
   <!-- anonymous, cookie-free visit stats; only counts on the real site, not when testing locally -->
   <script defer src="https://cloud.umami.is/script.js" data-website-id="ffb47bf2-77f6-4048-8173-ebe3bbfba696" data-domains="santa-surprise.com" data-exclude-search="true"></script>
 </head>
 <body>
   <div id="home">
+    <div id="styleBox">
+      <div id="styleToggle" role="group" aria-label="Game style">
+        <button id="styleScary" aria-pressed="true">&#128123; Normal</button>
+        <button id="styleKids" aria-pressed="false">&#129528; Kids</button>
+      </div>
+      <p id="styleHint"></p>
+    </div>
     <h1>Santa's Surprise</h1>
     <img id="homePresent" src="present.jpeg" alt="A wrapped present">
     <div id="homeCharacters"></div>
     <div id="homeButtons">
       <button id="play">Play</button>
     </div>
-    <div id="styleToggle" role="group" aria-label="Game style">
-      <button id="styleScary" aria-pressed="true">&#128123; Scary</button>
-      <button id="styleKids" aria-pressed="false">&#129528; Kids</button>
-    </div>
-    <p id="styleHint"></p>
     <button id="collectionButton">&#128214; Prize collection <span id="collectionCount"></span></button>
     <p id="credits">
       <a id="homeFeedback" href="mailto:info@skydistribute.com?subject=Santa%27s%20Surprise%20feedback" data-umami-event="feedback" data-umami-event-from="home">&#128172; Send feedback</a><br>
@@ -97,6 +99,6 @@
   <button id="mute" aria-label="Turn music off">&#128266;</button>
   <div id="scare" hidden><img id="scareImg" alt=""></div>
   <div id="splat" hidden><div id="splatBurst">&#9924;<span>SPLAT!</span></div></div>
-  <script src="game.js?v=20261026b"></script>
+  <script src="game.js?v=20261026d"></script>
 </body>
 </html>

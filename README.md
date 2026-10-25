@@ -5,14 +5,14 @@ open the one with the bomb inside.
 
 **Play it at [santa-surprise.com](https://santa-surprise.com)**
 
-> **Warning:** the normal **Scary** style has loud sounds, sudden scary
+> **Warning:** the **Normal** style has loud sounds, sudden scary
 > pictures and a flashing, shaking screen. It is not suitable for young
 > children or anyone sensitive to flashing lights. For young children, pick
 > **Kids** on the home screen: no scary pictures and no flashing.
 
 ## How to play
 
-1. On the home screen pick **👻 Scary** or **🧸 Kids**, press **Play**, and
+1. On the home screen pick **👻 Normal** or **🧸 Kids**, press **Play**, and
    choose to play with a friend or against the bot.
 2. Each player picks a character (Santa, Boy Elf, Girl Elf, Gingerbread Man,
    Snowman or Reindeer) and can type a name.
@@ -70,14 +70,14 @@ the `?v=` number bumped in `index.html` so browsers load the new version.
 ## Privacy
 
 The game has no accounts, cookies or ads. Names you type stay in your browser
-and are gone when you close the page. Your prize collection and the Scary/Kids
+and are gone when you close the page. Your prize collection and the Normal/Kids
 choice are saved in your browser only (local storage) and are never sent
 anywhere.
 
 It counts visits with [Umami](https://umami.is), which uses no cookies and
 stores nothing that identifies you. It records anonymous totals like country,
 device type, browser and the site you came from, plus game events: games
-started (friend or bot, Scary or Kids), characters picked, games finished or
+started (friend or bot, Normal or Kids), characters picked, games finished or
 left early, sudden deaths, diamonds found, collection views and feedback
 clicks. Typed names are never sent.
 Stats are only counted on santa-surprise.com, not when running it locally.

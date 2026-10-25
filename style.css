@@ -140,10 +140,17 @@ body {
   font-size: 1.3rem;
 }
 
-/* Scary / Kids switch and the collection link on the home screen */
+/* Normal / Kids switch at the top of the home screen, and the collection link */
+#styleBox {
+  position: fixed;
+  top: 10px;
+  left: 56px;
+  right: 56px; /* clear of the mute button */
+  text-align: center;
+}
+
 #styleToggle {
   display: inline-flex;
-  margin-top: 14px;
   border: 1px solid rgba(255, 207, 110, 0.5);
   border-radius: 999px;
   overflow: hidden;
@@ -173,8 +180,7 @@ body {
 }
 
 #styleHint {
-  min-height: 2.6em;
-  margin: 6px auto 0;
+  margin: 4px auto 0;
   max-width: 300px;
   font-size: 0.8rem;
   color: #8f98b3;
