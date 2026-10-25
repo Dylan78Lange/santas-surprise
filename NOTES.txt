@@ -295,12 +295,11 @@ STATS AND FEEDBACK (2026-10-25)
   on the end-of-game pop-up. Both open an email to info@skydistribute.com.
 - Home screen credits say "Anonymous visit stats, no cookies."
 
-PRIZES REMOVED, DIAMOND KEPT (2026-10-25)
------------------------------------------
-- The everyday prizes (sweets, teddy bear, dinosaur, yo-yo and so on) are gone.
-  A safe present says "You are safe!" again and the box just disappears.
-- Only the diamond is left: DIAMOND_CHANCE = 0.01 (about 1 safe present in 100).
-  It shows 💎 on the board, "WOW! ... found a DIAMOND 💎!", and is still tracked
-  in Umami.
-- The result pop-up shows a 💎 line only for a player who found diamonds that
-  round (or that game, on the final pop-up).
+PRIZES BACK, NOW THEY FADE (2026-10-25)
+---------------------------------------
+- The diamond-only change was undone: every safe present has a prize again.
+- An everyday prize shows on the board for PRIZE_SHOW_MS (1.6 seconds), then
+  fades away, leaving an empty spot. The diamond stays and keeps sparkling. The
+  bomb (💣) stays too.
+- With reduced motion turned on, the prize disappears without fading.
+- The result pop-ups still list everyone's prizes.
