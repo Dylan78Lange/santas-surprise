@@ -127,6 +127,31 @@ body {
   font-size: 1.3rem;
 }
 
+.feedback {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 14px;
+  color: #ffcf6e;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border: 1px solid rgba(255, 207, 110, 0.5);
+  border-radius: 999px;
+}
+
+.feedback:hover,
+.feedback:focus-visible {
+  background: rgba(255, 207, 110, 0.12);
+}
+
+#resultFeedback {
+  display: table;
+  margin: 12px auto 0;
+}
+
+#resultFeedback[hidden] {
+  display: none;
+}
+
 #warning {
   width: min(90vw, 460px);
   text-align: center;

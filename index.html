@@ -3,10 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; media-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cloud.umami.is; style-src 'self'; img-src 'self'; media-src 'self'; connect-src 'self' https://gateway.umami.is; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="no-referrer">
   <title>Santa's Surprise</title>
-  <link rel="stylesheet" href="style.css?v=20261025i">
+  <link rel="stylesheet" href="style.css?v=20261025j">
+  <!-- anonymous, cookie-free visit stats; only counts on the real site, not when testing locally -->
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="ffb47bf2-77f6-4048-8173-ebe3bbfba696" data-domains="santa-surprise.com" data-exclude-search="true"></script>
 </head>
 <body>
   <div id="home">
@@ -16,11 +18,12 @@
     <div id="homeButtons">
       <button id="play">Play</button>
     </div>
+    <a class="feedback" href="mailto:info@skydistribute.com?subject=Santa%27s%20Surprise%20feedback" data-umami-event="feedback" data-umami-event-from="home">&#128172; Send feedback</a>
     <p id="credits">
       Crackle by <a href="https://freesound.org/people/lulyc/packs/19233/" target="_blank" rel="noopener">lulyc</a>
       (<a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY</a>),
       scares from <a href="https://pixabay.com/sound-effects/search/jumpscare/" target="_blank" rel="noopener">Pixabay</a>.
-      Unofficial fan game.
+      Unofficial fan game. Anonymous visit stats, no cookies.
     </p>
   </div>
   <div id="mode" hidden>
@@ -72,11 +75,12 @@
       <p id="resultText"></p>
       <div id="resultPlayers"></div>
       <button id="resultButton"></button>
+      <a id="resultFeedback" class="feedback" href="mailto:info@skydistribute.com?subject=Santa%27s%20Surprise%20feedback" data-umami-event="feedback" data-umami-event-from="game end" hidden>&#128172; Tell us what you think</a>
     </div>
   </div>
   <button id="homeButton" aria-label="Go to the home screen" hidden>&#127968;</button>
   <button id="mute" aria-label="Turn music off">&#128266;</button>
   <div id="scare" hidden><img id="scareImg" alt=""></div>
-  <script src="game.js?v=20261025i"></script>
+  <script src="game.js?v=20261025j"></script>
 </body>
 </html>

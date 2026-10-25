@@ -280,3 +280,17 @@ PRIZES AND RESULT POP-UP (2026-10-25, not deployed yet)
 - At the end of the game the pop-up names the winner (🏆, gold border) and
   shows every prize each player found in the whole game.
 - The old "Next round" button under the message is gone (the pop-up has it).
+
+STATS AND FEEDBACK (2026-10-25)
+-------------------------------
+- Umami Cloud (free, cookie-free) script in index.html, website id
+  ffb47bf2-77f6-4048-8173-ebe3bbfba696. data-domains="santa-surprise.com", so
+  local testing is not counted. CSP allows cloud.umami.is (script) and
+  gateway.umami.is (where stats are sent).
+- Game events (track() in game.js): character {character, mode},
+  game-start {mode}, game-finish {mode, winner, suddenDeath, diamonds},
+  game-quit {mode, round} when 🏠 is pressed mid-game, diamond {character, bot},
+  feedback {from} on the feedback links. Typed names are never sent.
+- Feedback: "💬 Send feedback" on the home screen and "Tell us what you think"
+  on the end-of-game pop-up. Both open an email to info@skydistribute.com.
+- Home screen credits say "Anonymous visit stats, no cookies."

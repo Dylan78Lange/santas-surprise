@@ -84,6 +84,19 @@ const resultTitleEl = document.getElementById('resultTitle');
 const resultTextEl = document.getElementById('resultText');
 const resultPlayersEl = document.getElementById('resultPlayers');
 const resultButtonEl = document.getElementById('resultButton');
+const resultFeedbackEl = document.getElementById('resultFeedback');
+
+// Anonymous game stats for Umami (see index.html). Does nothing if the stats
+// script is blocked or not loaded, or when testing locally.
+function track(name, data) {
+  try {
+    if (window.umami) window.umami.track(name, data);
+  } catch (error) {
+    // stats must never break the game
+  }
+}
+
+let gameInProgress = false; // for counting games people leave before the end
 const scareEl = document.getElementById('scare');
 const scareImgEl = document.getElementById('scareImg');
 
@@ -661,6 +674,7 @@ function showName(player, character) {
   nameContinueEl.onclick = () => {
     chosen[player] = character;
     names[player] = nameInputEl.value.trim(); // blank means the character's name is used
+    track('character', { character: character.name, mode: vsBot ? 'bot' : 'friend' });
 
     nameScreenEl.hidden = true;
     if (player === 0 && !vsBot) {
@@ -668,6 +682,8 @@ function showName(player, character) {
     } else {
       if (vsBot) assignBot();
       gameEl.hidden = false;
+      gameInProgress = true;
+      track('game-start', { mode: vsBot ? 'bot' : 'friend' });
       startRound(0);
     }
   };
@@ -795,6 +811,7 @@ function showResult({ title, text, final, winner, buttonLabel, onContinue }) {
     resultPlayersEl.appendChild(card);
   });
 
+  resultFeedbackEl.hidden = !final;
   resultButtonEl.textContent = buttonLabel;
   resultButtonEl.onclick = () => {
     resultEl.hidden = true;
@@ -844,6 +861,7 @@ function endRound(bombOpener) {
   if (round === SUDDEN_DEATH) {
     gameOver = true;
     const winner = 1 - bombOpener;
+    trackFinish(winner);
     result = { title: playerName(winner) + ' wins!', text: what + ' ' + finalScore, final: true, winner, buttonLabel: 'Play again', onContinue: showHome };
   } else if (round < NORMAL_ROUNDS - 1) {
     result = { title: 'Round ' + (round + 1) + ' result', text: what, buttonLabel: 'Next round', onContinue: () => startRound(round + 1) };
@@ -852,12 +870,23 @@ function endRound(bombOpener) {
   } else {
     gameOver = true;
     const winner = scores[0] > scores[1] ? 0 : 1;
+    trackFinish(winner);
     result = { title: playerName(winner) + ' wins the game!', text: what + ' ' + finalScore, final: true, winner, buttonLabel: 'Play again', onContinue: showHome };
   }
 
   // after a bomb, wait for the jump scare to finish first
   clearTimeout(resultTimer);
   resultTimer = setTimeout(() => showResult(result), bombOpener === null ? RESULT_DELAY_MS : SCARE_MS + 200);
+}
+
+function trackFinish(winner) {
+  gameInProgress = false;
+  track('game-finish', {
+    mode: vsBot ? 'bot' : 'friend',
+    winner: vsBot ? (winner === 0 ? 'player' : 'bot') : chosen[winner].name,
+    suddenDeath: round === SUDDEN_DEATH,
+    diamonds: prizes[0].concat(prizes[1]).filter(prize => prize.rare).length,
+  });
 }
 
 // puts what was inside on the opened present's spot
@@ -890,6 +919,7 @@ function openPresent(button, index) {
   prizes[currentPlayer].push(prize);
   roundPrizes[currentPlayer].push(prize);
   revealPresent(button, prize.emoji, prize.rare);
+  if (prize.rare) track('diamond', { character: chosen[currentPlayer].name, bot: vsBot && currentPlayer === 1 });
   button.setAttribute('aria-label', prize.name);
 
   let text = prize.rare
@@ -1005,6 +1035,10 @@ const homeButtonEl = document.getElementById('homeButton');
 
 // back to the very first screen, from anywhere
 function showHome() {
+  if (gameInProgress) {
+    gameInProgress = false;
+    track('game-quit', { mode: vsBot ? 'bot' : 'friend', round: round === SUDDEN_DEATH ? 'sudden death' : round + 1 });
+  }
   showMode();
   document.getElementById('mode').hidden = true;
   document.getElementById('warning').hidden = true;

@@ -61,9 +61,20 @@ the `?v=` number bumped in `index.html` so browsers load the new version.
 
 ## Privacy
 
-The game has no accounts, cookies, tracking or ads, and it does not send
-anything anywhere. Names you type stay in your browser and are gone when you
-close the page.
+The game has no accounts, cookies or ads. Names you type stay in your browser
+and are gone when you close the page.
+
+It counts visits with [Umami](https://umami.is), which uses no cookies and
+stores nothing that identifies you. It records anonymous totals like country,
+device type, browser and the site you came from, plus game events: games
+started (friend or bot), characters picked, games finished or left early,
+sudden deaths, diamonds found and feedback clicks. Typed names are never sent.
+Stats are only counted on santa-surprise.com, not when running it locally.
+
+## Feedback
+
+Use the **💬 Send feedback** button on the home screen, or email
+[info@skydistribute.com](mailto:info@skydistribute.com).
 
 ## Credits and license
 
