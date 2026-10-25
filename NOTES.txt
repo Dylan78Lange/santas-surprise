@@ -264,3 +264,19 @@ Rudolph and the Grinch are trademarked, so they were replaced:
 - Rudolph -> Reindeer (reindeer.jpeg): the old picture with the red nose made brown.
 - Grinch -> Girl Elf (girlelf.jpeg, from Dylan's girl-elf02.jpeg, resized to 768px).
 - The Grinch joke became "What do you call an elf who sings? A wrapper."
+
+PRIZES AND RESULT POP-UP (2026-10-25, not deployed yet)
+-------------------------------------------------------
+- Every safe present has a prize (PRIZES list at the top of game.js, each with
+  a weight). Common: sweets, lollipop, chocolate, cookie. Then teddy bear,
+  dinosaur, yo-yo, balloon, socks, football, kite, toy train, robot. Rare:
+  video game (about 2%) and diamond (about 1%, glows on the board).
+- The opened present shows its prize (emoji) where the box was. The bomb shows 💣.
+- Message: "Safe! Santa found a teddy bear 🧸." (a joke may follow).
+- Prizes don't change the score.
+- After each round a pop-up shows what happened, +points and score for each
+  player, and the prizes each found that round. Its button is Next round /
+  Spin the wheel (tie) / Play again. It waits until the jump scare is over.
+- At the end of the game the pop-up names the winner (🏆, gold border) and
+  shows every prize each player found in the whole game.
+- The old "Next round" button under the message is gone (the pop-up has it).

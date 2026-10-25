@@ -15,12 +15,18 @@ open the one with the bomb inside.
 2. Each player picks a character (Santa, Elf, Girl Elf, Gingerbread Man,
    Snowman or Reindeer) and can type a name.
 3. There are 16 presents. Players take turns opening one.
-   - A safe present says "You are safe!" and sometimes tells a Christmas joke.
+   - A safe present has a prize inside: sweets, a teddy bear, a dinosaur, a
+     yo-yo, a robot and more. If you are very lucky (about 1 in 100), it is a
+     💎 diamond. Prizes are just for fun and don't change the score. Sometimes
+     a Christmas joke comes with it too.
    - The bomb gives a jump scare, and the **other** player gets a point.
    - If only one present is left, it must be the bomb, so both players get a
      point.
 4. After 3 rounds the higher score wins. A tie goes to **sudden death**: a
    spinning wheel picks who starts, and whoever opens the bomb loses.
+5. After each round a pop-up shows what happened, the points and each
+   player's prizes. At the end it shows the winner and every prize from the
+   whole game.
 
 Players take turns going first each round. The 🏠 button goes back to the home
 screen and 🔊 turns the music on or off.

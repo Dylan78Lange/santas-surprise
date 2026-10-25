@@ -431,7 +431,10 @@ body {
 @media (prefers-reduced-motion: reduce) {
   #homeCharacters img,
   #scare,
-  #scare::after {
+  #scare::after,
+  #result,
+  #resultCard,
+  .present .inside {
     animation: none;
   }
 
@@ -440,12 +443,122 @@ body {
   }
 }
 
-#action {
-  display: block;
-  margin: 0 auto 8px;
-  padding: 10px 22px;
-  font: inherit;
+/* round and game result pop-up; under the home and mute buttons so they still work */
+#result {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 12px 12px;
+  box-sizing: border-box;
+  background: rgba(8, 10, 20, 0.7);
+  animation: resultFade 0.25s ease-out;
+}
+
+#result[hidden] {
+  display: none;
+}
+
+#resultCard {
+  width: min(100%, 520px);
+  max-height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 20px 18px 18px;
+  text-align: center;
+  background: #1f2640;
+  border: 2px solid #ffcf6e;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  animation: resultPop 0.3s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+#resultTitle {
+  margin: 0 0 6px;
+  color: #ffcf6e;
+  font-size: 1.6rem;
+}
+
+#resultText {
+  margin: 0 0 14px;
   font-size: 1.05rem;
+}
+
+#resultPlayers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.resultPlayer {
+  padding: 10px 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 2px solid transparent;
+  border-radius: 12px;
+}
+
+.resultPlayer.winner {
+  border-color: #ffcf6e;
+  background: rgba(255, 207, 110, 0.12);
+}
+
+.resultPlayer img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.resultPlayer p {
+  margin: 4px 0;
+}
+
+.resultName {
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
+
+.resultPoints {
+  font-size: 0.9rem;
+  color: #ffcf6e;
+}
+
+.resultLabel {
+  font-size: 0.8rem;
+  color: #b9bfd3;
+}
+
+.prizeList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 8px;
+  font-size: 1.15rem;
+  color: #b9bfd3;
+}
+
+.prizeList:not(:has(.prizeChip)) {
+  font-size: 0.85rem;
+}
+
+.prizeChip {
+  white-space: nowrap;
+  color: #fff;
+}
+
+.prizeChip.rare {
+  padding: 0 6px;
+  border-radius: 10px;
+  background: rgba(120, 200, 255, 0.2);
+  box-shadow: 0 0 10px rgba(120, 200, 255, 0.6);
+}
+
+#resultButton {
+  padding: 10px 26px;
+  font: inherit;
+  font-size: 1.1rem;
   color: #fff;
   background: #b3202a;
   border: none;
@@ -453,8 +566,17 @@ body {
   cursor: pointer;
 }
 
-#action[hidden] {
-  display: none;
+#resultButton:focus-visible {
+  outline: 3px solid #ffcf6e;
+  outline-offset: 2px;
+}
+
+@keyframes resultFade {
+  from { opacity: 0; }
+}
+
+@keyframes resultPop {
+  from { transform: scale(0.85); opacity: 0; }
 }
 
 #presents {
@@ -468,14 +590,40 @@ body {
 }
 
 .present {
+  position: relative;
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
 }
 
-.present.opened {
+/* an opened present shows what was inside instead of the box */
+.present.opened img {
   visibility: hidden;
+}
+
+.present .inside {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: min(13cqmin, 4.5rem);
+  color: #fff; /* a disabled button's see-through text color would fade the emoji */
+  animation: insidePop 0.35s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+
+.present .inside.rare {
+  filter: drop-shadow(0 0 10px rgba(120, 200, 255, 0.9));
+  animation: insidePop 0.35s cubic-bezier(0.2, 1.6, 0.4, 1), sparkle 1.2s ease-in-out 0.35s infinite;
+}
+
+@keyframes insidePop {
+  from { transform: scale(0.2); opacity: 0; }
+}
+
+@keyframes sparkle {
+  50% { transform: scale(1.15); }
 }
 
 .present img {
