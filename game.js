@@ -52,7 +52,7 @@ const RESULT_DELAY_MS = 900; // a short look at the last present before the resu
 
 const CHARACTERS = [
   { id: 'santa', name: 'Santa', image: 'santa.jpeg' },
-  { id: 'elf', name: 'Elf', image: 'elf.jpeg' },
+  { id: 'elf', name: 'Boy Elf', image: 'elf.jpeg' },
   { id: 'gingerbread', name: 'Gingerbread Man', image: 'gingerbreadman.jpeg', label: 'Ginger\u00ADbread Man' }, // soft hyphen so it fits on phones
   { id: 'snowman', name: 'Snowman', image: 'snowman.jpeg' },
   { id: 'girlelf', name: 'Girl Elf', image: 'girlelf.jpeg' },

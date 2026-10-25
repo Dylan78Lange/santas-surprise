@@ -12,7 +12,7 @@ open the one with the bomb inside.
 ## How to play
 
 1. Press **Play** and choose to play with a friend or against the bot.
-2. Each player picks a character (Santa, Elf, Girl Elf, Gingerbread Man,
+2. Each player picks a character (Santa, Boy Elf, Girl Elf, Gingerbread Man,
    Snowman or Reindeer) and can type a name.
 3. There are 16 presents. Players take turns opening one.
    - A safe present has a prize inside: sweets, a teddy bear, a dinosaur, a
