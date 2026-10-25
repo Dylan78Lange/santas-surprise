@@ -38,14 +38,10 @@ Apache-2.0 license and may not be sold or shared on their own.
 Pictures
 --------
 The character, present and scare pictures were made with an AI image tool
-(Google). Santa Claus, elves, snowmen and gingerbread men are traditional
-figures. The Grinch is a trademark of Dr. Seuss Enterprises, and Rudolph the
-Red-Nosed Reindeer is a trademark of The Rudolph Company. This is a fan game, not
-made by or connected with either of them, and those two pictures are not covered
-by this project's Apache-2.0 license.
+(Google). Santa Claus, elves, reindeer, snowmen and gingerbread men are
+traditional figures.
 
 What the Apache-2.0 license covers
 ----------------------------------
 The license in LICENSE covers the game's own code (index.html, game.js,
-style.css) and the pictures not named above. The sounds and pictures named above
-keep their own licenses or owners.
+style.css) and the pictures. The sounds named above keep their own licenses.

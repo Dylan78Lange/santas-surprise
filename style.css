@@ -172,7 +172,7 @@ body {
 
 #characters {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr)); /* equal columns, even with a long name like Gingerbread Man */
   gap: 12px;
 }
 

@@ -17,7 +17,7 @@ const JOKES = [
   'What do elves learn in school? The elf-abet.',
   'Why was the gingerbread man so sad? He felt crumby.',
   "What's a snowman's favorite place to dance? A snowball.",
-  'Why did the Grinch bring a ladder? To go over the top.',
+  'What do you call an elf who sings? A wrapper.',
   'What do you call a snowman in July? A puddle.',
   'Why does Santa have three gardens? So he can ho, ho, ho.',
   'What do reindeer say before they tell a joke? This will sleigh you.',
@@ -32,10 +32,10 @@ const JOKES = [
 const CHARACTERS = [
   { id: 'santa', name: 'Santa', image: 'santa.jpeg' },
   { id: 'elf', name: 'Elf', image: 'elf.jpeg' },
-  { id: 'gingerbread', name: 'Gingerbread Man', image: 'gingerbreadman.jpeg' },
+  { id: 'gingerbread', name: 'Gingerbread Man', image: 'gingerbreadman.jpeg', label: 'Ginger\u00ADbread Man' }, // soft hyphen so it fits on phones
   { id: 'snowman', name: 'Snowman', image: 'snowman.jpeg' },
-  { id: 'grinch', name: 'Grinch', image: 'grinch.jpeg' },
-  { id: 'rudolph', name: 'Rudolph', image: 'Rudolph.jpeg' },
+  { id: 'girlelf', name: 'Girl Elf', image: 'girlelf.jpeg' },
+  { id: 'reindeer', name: 'Reindeer', image: 'reindeer.jpeg' },
 ];
 
 const selectEl = document.getElementById('select');
@@ -667,7 +667,7 @@ function showSelect(player) {
     img.alt = character.name;
 
     const label = document.createElement('span');
-    label.textContent = character.name;
+    label.textContent = character.label || character.name;
 
     button.appendChild(img);
     button.appendChild(label);

@@ -257,3 +257,10 @@ GA READINESS FIXES (2026-10-25)
 - _config.yml keeps NOTES.txt and zips off the website (still in the repo).
 - CREDITS.txt now credits the Pixabay jump scare sounds, notes the Grinch and
   Rudolph trademarks, and says what the Apache-2.0 license covers.
+
+CHARACTER SWAP (2026-10-25)
+---------------------------
+Rudolph and the Grinch are trademarked, so they were replaced:
+- Rudolph -> Reindeer (reindeer.jpeg): the old picture with the red nose made brown.
+- Grinch -> Girl Elf (girlelf.jpeg, from Dylan's girl-elf02.jpeg, resized to 768px).
+- The Grinch joke became "What do you call an elf who sings? A wrapper."
