@@ -294,3 +294,13 @@ STATS AND FEEDBACK (2026-10-25)
 - Feedback: "💬 Send feedback" on the home screen and "Tell us what you think"
   on the end-of-game pop-up. Both open an email to info@skydistribute.com.
 - Home screen credits say "Anonymous visit stats, no cookies."
+
+PRIZES REMOVED, DIAMOND KEPT (2026-10-25)
+-----------------------------------------
+- The everyday prizes (sweets, teddy bear, dinosaur, yo-yo and so on) are gone.
+  A safe present says "You are safe!" again and the box just disappears.
+- Only the diamond is left: DIAMOND_CHANCE = 0.01 (about 1 safe present in 100).
+  It shows 💎 on the board, "WOW! ... found a DIAMOND 💎!", and is still tracked
+  in Umami.
+- The result pop-up shows a 💎 line only for a player who found diamonds that
+  round (or that game, on the final pop-up).

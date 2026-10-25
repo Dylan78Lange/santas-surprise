@@ -29,25 +29,7 @@ const JOKES = [
   "Why couldn't the gingerbread man be a secret agent? He kept getting spotted by the milk.",
 ];
 
-// Every safe present has a prize inside. A higher weight means it turns up more
-// often; the diamond is very rare (about 1 present in 115).
-const PRIZES = [
-  { name: 'Sweets', found: 'some sweets', emoji: '🍬', weight: 14 },
-  { name: 'Lollipop', found: 'a lollipop', emoji: '🍭', weight: 10 },
-  { name: 'Chocolate', found: 'a chocolate bar', emoji: '🍫', weight: 10 },
-  { name: 'Cookie', found: 'a cookie', emoji: '🍪', weight: 10 },
-  { name: 'Teddy bear', found: 'a teddy bear', emoji: '🧸', weight: 8 },
-  { name: 'Dinosaur', found: 'a toy dinosaur', emoji: '🦕', weight: 8 },
-  { name: 'Yo-yo', found: 'a yo-yo', emoji: '🪀', weight: 8 },
-  { name: 'Balloon', found: 'a balloon', emoji: '🎈', weight: 8 },
-  { name: 'Christmas socks', found: 'some Christmas socks', emoji: '🧦', weight: 6 },
-  { name: 'Football', found: 'a football', emoji: '⚽', weight: 6 },
-  { name: 'Kite', found: 'a kite', emoji: '🪁', weight: 5 },
-  { name: 'Toy train', found: 'a toy train', emoji: '🚂', weight: 5 },
-  { name: 'Robot', found: 'a robot', emoji: '🤖', weight: 4 },
-  { name: 'Video game', found: 'a video game', emoji: '🎮', weight: 2 },
-  { name: 'Diamond', found: 'a DIAMOND', emoji: '💎', weight: 1, rare: true },
-];
+const DIAMOND_CHANCE = 0.01; // about 1 safe present in 100 has a diamond inside
 const RESULT_DELAY_MS = 900; // a short look at the last present before the result pops up
 
 const CHARACTERS = [
@@ -507,8 +489,8 @@ let currentPlayer;
 let gameOver;
 let scores;
 let roundStartScores;
-let prizes; // every prize each player found this game
-let roundPrizes; // just this round's
+let diamonds; // diamonds each player found this game
+let roundDiamonds; // just this round's
 let resultTimer;
 let chosen = [null, null];
 let names = [null, null];
@@ -745,39 +727,16 @@ function updateStatus() {
   turnEl.textContent = roundLabel() + ' · ' + turn;
 }
 
-function randomPrize() {
-  const total = PRIZES.reduce((sum, prize) => sum + prize.weight, 0);
-  let pick = Math.random() * total;
-  for (const prize of PRIZES) {
-    pick -= prize.weight;
-    if (pick < 0) return prize;
-  }
-  return PRIZES[0];
+// a sparkly "💎 ×2" for the result pop-up, or nothing when no diamonds were found
+function diamondLine(count, when) {
+  const line = document.createElement('p');
+  line.className = 'resultDiamonds';
+  line.textContent = '💎' + (count > 1 ? ' ×' + count : '') + ' ' + (count > 1 ? 'diamonds' : 'diamond') + ' ' + when;
+  return line;
 }
 
-// a row of prizes like "🧸 2  🍬 1", in the PRIZES order, rarest last
-function prizeList(list) {
-  const row = document.createElement('div');
-  row.className = 'prizeList';
-  if (list.length === 0) {
-    row.textContent = 'No prizes';
-    return row;
-  }
-  PRIZES.forEach(prize => {
-    const count = list.filter(found => found === prize).length;
-    if (count === 0) return;
-    const chip = document.createElement('span');
-    chip.className = 'prizeChip' + (prize.rare ? ' rare' : '');
-    chip.title = prize.name;
-    chip.setAttribute('aria-label', count + ' ' + prize.name);
-    chip.textContent = prize.emoji + (count > 1 ? ' ×' + count : '');
-    row.appendChild(chip);
-  });
-  return row;
-}
-
-// The pop-up after each round, and at the end of the game. `final` shows the
-// prizes from the whole game and crowns the winner.
+// The pop-up after each round, and at the end of the game. `final` counts the
+// diamonds from the whole game and crowns the winner.
 function showResult({ title, text, final, winner, buttonLabel, onContinue }) {
   resultTitleEl.textContent = title;
   resultTextEl.textContent = text;
@@ -802,12 +761,9 @@ function showResult({ title, text, final, winner, buttonLabel, onContinue }) {
       ? 'Score: ' + scores[player]
       : '+' + gained + ' this round · Score: ' + scores[player];
 
-    const found = final ? prizes[player] : roundPrizes[player];
-    const label = document.createElement('p');
-    label.className = 'resultLabel';
-    label.textContent = final ? 'Prizes this game (' + found.length + ')' : 'Prizes this round';
-
-    card.append(img, name, points, label, prizeList(found));
+    card.append(img, name, points);
+    const found = final ? diamonds[player] : roundDiamonds[player];
+    if (found > 0) card.appendChild(diamondLine(found, final ? 'this game' : 'this round'));
     resultPlayersEl.appendChild(card);
   });
 
@@ -885,7 +841,7 @@ function trackFinish(winner) {
     mode: vsBot ? 'bot' : 'friend',
     winner: vsBot ? (winner === 0 ? 'player' : 'bot') : chosen[winner].name,
     suddenDeath: round === SUDDEN_DEATH,
-    diamonds: prizes[0].concat(prizes[1]).filter(prize => prize.rare).length,
+    diamonds: diamonds[0] + diamonds[1],
   });
 }
 
@@ -915,16 +871,15 @@ function openPresent(button, index) {
     return;
   }
 
-  const prize = randomPrize();
-  prizes[currentPlayer].push(prize);
-  roundPrizes[currentPlayer].push(prize);
-  revealPresent(button, prize.emoji, prize.rare);
-  if (prize.rare) track('diamond', { character: chosen[currentPlayer].name, bot: vsBot && currentPlayer === 1 });
-  button.setAttribute('aria-label', prize.name);
-
-  let text = prize.rare
-    ? 'WOW! ' + playerName(currentPlayer) + ' found ' + prize.found + ' ' + prize.emoji + '!'
-    : 'Safe! ' + playerName(currentPlayer) + ' found ' + prize.found + ' ' + prize.emoji + '.';
+  let text = 'You are safe!';
+  if (Math.random() < DIAMOND_CHANCE) {
+    diamonds[currentPlayer]++;
+    roundDiamonds[currentPlayer]++;
+    revealPresent(button, '💎', true);
+    button.setAttribute('aria-label', 'Diamond');
+    track('diamond', { character: chosen[currentPlayer].name, bot: vsBot && currentPlayer === 1 });
+    text = 'WOW! ' + playerName(currentPlayer) + ' found a DIAMOND 💎!';
+  }
   if (Math.random() < JOKE_CHANCE && jokesLeft.length > 0) {
     text += ' ' + jokesLeft.pop();
   }
@@ -953,7 +908,7 @@ function startRound(newRound) {
   messageEl.textContent = '';
   hideResult();
   roundStartScores = scores.slice();
-  roundPrizes = [[], []];
+  roundDiamonds = [0, 0];
   bombIndex = Math.floor(Math.random() * PRESENT_COUNT);
   jokesLeft = shuffle(JOKES);
   openedCount = 0;
@@ -984,7 +939,7 @@ function startGame() {
   setMusicWanted(false); // music waits until the first round begins
   clearTimeout(botTimer);
   scores = [0, 0];
-  prizes = [[], []];
+  diamonds = [0, 0];
   gameOver = false;
   chosen = [null, null];
   names = [null, null];

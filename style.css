@@ -563,34 +563,13 @@ body {
   color: #ffcf6e;
 }
 
-.resultLabel {
-  font-size: 0.8rem;
-  color: #b9bfd3;
-}
-
-.prizeList {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 4px 8px;
-  font-size: 1.15rem;
-  color: #b9bfd3;
-}
-
-.prizeList:not(:has(.prizeChip)) {
-  font-size: 0.85rem;
-}
-
-.prizeChip {
-  white-space: nowrap;
-  color: #fff;
-}
-
-.prizeChip.rare {
-  padding: 0 6px;
+.resultDiamonds {
+  display: inline-block;
+  padding: 2px 10px;
   border-radius: 10px;
   background: rgba(120, 200, 255, 0.2);
   box-shadow: 0 0 10px rgba(120, 200, 255, 0.6);
+  font-size: 0.9rem;
 }
 
 #resultButton {
@@ -635,7 +614,7 @@ body {
   cursor: pointer;
 }
 
-/* an opened present shows what was inside instead of the box */
+/* an opened present shows a diamond or the bomb where the box was */
 .present.opened img {
   visibility: hidden;
 }
