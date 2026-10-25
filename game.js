@@ -10,6 +10,7 @@ const WHEEL_SLICES = 8;
 const WHEEL_SPINS = 5;
 const WHEEL_MS = 4000;
 const WHEEL_COLORS = ['#b3202a', '#1f7a3a'];
+const SPLAT_MS = 1600; // how long the kids mode snowball splat stays on screen
 
 const JOKES = [
   'What do snowmen eat for breakfast? Frosted Flakes.',
@@ -335,7 +336,7 @@ function shuffledSongOrder() {
   return order;
 }
 
-function playBell(frequency, time, seconds) {
+function playBell(frequency, time, seconds, output = musicGain) {
   const gain = audioContext.createGain();
   const ring = Math.max(seconds, 0.3) + 0.3;
   gain.gain.setValueAtTime(0.0001, time);
@@ -352,7 +353,7 @@ function playBell(frequency, time, seconds) {
     osc.start(time);
     osc.stop(time + ring + 0.05);
   });
-  gain.connect(musicGain);
+  gain.connect(output);
 }
 
 function scheduleMusic() {
@@ -486,6 +487,226 @@ muteEl.onclick = () => {
   if (musicMuted) stopMusic();
   else startMusic();
 };
+
+// ---- little sound effects: prize chime, diamond sparkle, winner fanfare, snowball splat ----
+// They follow the 🔊 button, like the music.
+const EFFECT_VOLUME = 0.3;
+
+function playNotes(notes, gap) {
+  if (musicMuted) return;
+  try {
+    prepareAudio();
+    if (!audioContext) return;
+    const output = audioContext.createGain();
+    output.gain.value = EFFECT_VOLUME;
+    output.connect(audioContext.destination);
+    let time = audioContext.currentTime + 0.02;
+    notes.forEach(note => {
+      playBell(noteFrequency(note), time, 0.25, output);
+      time += gap;
+    });
+    setTimeout(() => output.disconnect(), (time - audioContext.currentTime + 1.5) * 1000);
+  } catch (error) {
+    // no sound available
+  }
+}
+
+const playPrizeSound = () => playNotes(['E5', 'A5'], 0.09);
+const playDiamondSound = () => playNotes(['C5', 'E5', 'G5', 'C6', 'E6', 'G6', 'C7'], 0.06);
+const playWinnerSound = () => playNotes(['C5', 'E5', 'G5', 'C6', 'G5', 'C6'], 0.13);
+
+// a cartoon "boing" and a soft splat, for kids mode
+function playSplatSound() {
+  if (musicMuted) return;
+  try {
+    prepareAudio();
+    const now = audioContext.currentTime;
+    const output = audioContext.createGain();
+    output.gain.value = 0.4;
+    output.connect(audioContext.destination);
+
+    const boing = audioContext.createOscillator();
+    const boingGain = audioContext.createGain();
+    boing.type = 'sine';
+    boing.frequency.setValueAtTime(700, now);
+    boing.frequency.exponentialRampToValueAtTime(110, now + 0.6);
+    boingGain.gain.setValueAtTime(0.8, now);
+    boingGain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+    boing.connect(boingGain);
+    boingGain.connect(output);
+    boing.start(now);
+    boing.stop(now + 0.7);
+
+    const length = 0.35;
+    const buffer = audioContext.createBuffer(1, audioContext.sampleRate * length, audioContext.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+    const splat = audioContext.createBufferSource();
+    splat.buffer = buffer;
+    const lowpass = audioContext.createBiquadFilter();
+    lowpass.type = 'lowpass';
+    lowpass.frequency.value = 900;
+    const splatGain = audioContext.createGain();
+    splatGain.gain.setValueAtTime(0.9, now + 0.05);
+    splatGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05 + length);
+    splat.connect(lowpass);
+    lowpass.connect(splatGain);
+    splatGain.connect(output);
+    splat.start(now + 0.05);
+
+    setTimeout(() => output.disconnect(), 1500);
+  } catch (error) {
+    // no sound available, the splat still shows
+  }
+}
+
+// confetti falling over the winner pop-up
+function throwConfetti() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const layer = document.createElement('div');
+  layer.id = 'confetti';
+  layer.setAttribute('aria-hidden', 'true');
+  const colors = ['#ffcf6e', '#b3202a', '#1f7a3a', '#7db4ff', '#ffffff'];
+  for (let i = 0; i < 80; i++) {
+    const bit = document.createElement('span');
+    bit.style.left = Math.random() * 100 + '%';
+    bit.style.background = colors[i % colors.length];
+    bit.style.animationDelay = Math.random() * 0.8 + 's';
+    bit.style.animationDuration = 2.2 + Math.random() * 1.6 + 's';
+    bit.style.setProperty('--drift', Math.random() * 160 - 80 + 'px');
+    bit.style.setProperty('--spin', Math.random() * 720 - 360 + 'deg');
+    layer.appendChild(bit);
+  }
+  document.body.appendChild(layer);
+  setTimeout(() => layer.remove(), 4800);
+}
+
+// ---- kids mode: a snowball splat instead of the bomb and jump scare ----
+const KIDS_KEY = 'santasSurprise.kidsMode';
+let kidsMode = false;
+try {
+  kidsMode = localStorage.getItem(KIDS_KEY) === 'yes';
+} catch (error) {
+  // no storage, start in the normal (scary) mode
+}
+
+const styleScaryEl = document.getElementById('styleScary');
+const styleKidsEl = document.getElementById('styleKids');
+const styleHintEl = document.getElementById('styleHint');
+
+function setKidsMode(on) {
+  kidsMode = on;
+  styleScaryEl.setAttribute('aria-pressed', String(!on));
+  styleKidsEl.setAttribute('aria-pressed', String(on));
+  styleHintEl.textContent = on
+    ? 'No scary pictures or flashing: a snowball splat instead of the bomb.'
+    : 'Jump scares, loud sounds and flashing. Not for young children.';
+  try {
+    localStorage.setItem(KIDS_KEY, on ? 'yes' : 'no');
+  } catch (error) {
+    // not remembered, that's fine
+  }
+}
+styleScaryEl.onclick = () => setKidsMode(false);
+styleKidsEl.onclick = () => setKidsMode(true);
+setKidsMode(kidsMode);
+
+const hazard = () => (kidsMode ? 'snowball' : 'bomb');
+const openedHazard = () => (kidsMode ? 'found the snowball' : 'opened the bomb');
+
+const splatEl = document.getElementById('splat');
+let splatTimer;
+
+function playSplat() {
+  setMusicWanted(false);
+  clearTimeout(splatTimer);
+  splatEl.hidden = false;
+  playSplatSound();
+  splatTimer = setTimeout(() => {
+    splatEl.hidden = true;
+  }, SPLAT_MS);
+}
+
+// ---- prize collection: every prize ever found on this device ----
+const COLLECTION_KEY = 'santasSurprise.collection';
+let collection = {};
+try {
+  collection = JSON.parse(localStorage.getItem(COLLECTION_KEY)) || {};
+} catch (error) {
+  // no storage: the collection only lasts until the page is closed
+}
+
+// returns true the first time this prize is found
+function addToCollection(prize) {
+  const isNew = !collection[prize.name];
+  collection[prize.name] = (collection[prize.name] || 0) + 1;
+  try {
+    localStorage.setItem(COLLECTION_KEY, JSON.stringify(collection));
+  } catch (error) {
+    // not saved, that's fine
+  }
+  return isNew;
+}
+
+const collectionEl = document.getElementById('collection');
+const collectionTextEl = document.getElementById('collectionText');
+const collectionGridEl = document.getElementById('collectionGrid');
+const collectionCountEl = document.getElementById('collectionCount');
+
+const foundCount = () => PRIZES.filter(prize => collection[prize.name]).length;
+
+function updateCollectionCount() {
+  collectionCountEl.textContent = '(' + foundCount() + '/' + PRIZES.length + ')';
+}
+
+function showCollection() {
+  const found = foundCount();
+  collectionTextEl.textContent = found === PRIZES.length
+    ? 'You found every prize! 🎉'
+    : found === 0
+      ? 'Open presents to find prizes. Can you find them all?'
+      : "You've found " + found + ' of ' + PRIZES.length + ' prizes.';
+  collectionGridEl.innerHTML = '';
+  PRIZES.forEach(prize => {
+    const count = collection[prize.name] || 0;
+    const tile = document.createElement('div');
+    tile.className = 'collectionTile' + (count ? ' found' : '') + (count && prize.rare ? ' rare' : '');
+
+    const emoji = document.createElement('span');
+    emoji.className = 'collectionEmoji';
+    emoji.textContent = count ? prize.emoji : '?';
+
+    const name = document.createElement('span');
+    name.className = 'collectionName';
+    name.textContent = count ? prize.name : prize.rare ? 'Very rare' : '???';
+
+    tile.append(emoji, name);
+    if (count > 1) {
+      const times = document.createElement('span');
+      times.className = 'collectionTimes';
+      times.textContent = '×' + count;
+      tile.appendChild(times);
+    }
+    collectionGridEl.appendChild(tile);
+  });
+  collectionEl.hidden = false;
+  document.getElementById('collectionClose').focus();
+  track('collection-open', { found });
+}
+
+function hideCollection() {
+  collectionEl.hidden = true;
+}
+
+document.getElementById('collectionButton').onclick = showCollection;
+document.getElementById('collectionClose').onclick = hideCollection;
+collectionEl.addEventListener('click', event => {
+  if (event.target === collectionEl) hideCollection(); // a click outside the card
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !collectionEl.hidden) hideCollection();
+});
+updateCollectionCount();
 
 function playJumpScare() {
   setMusicWanted(false);
@@ -684,7 +905,7 @@ function showName(player, character) {
       if (vsBot) assignBot();
       gameEl.hidden = false;
       gameInProgress = true;
-      track('game-start', { mode: vsBot ? 'bot' : 'friend' });
+      track('game-start', { mode: vsBot ? 'bot' : 'friend', style: kidsMode ? 'kids' : 'scary' });
       startRound(0);
     }
   };
@@ -778,7 +999,7 @@ function prizeList(list) {
 }
 
 // The pop-up after each round, and at the end of the game. `final` shows the
-// prizes from the whole game and crowns the winner.
+// prizes from the whole game, crowns the winner and throws confetti.
 function showResult({ title, text, final, winner, buttonLabel, onContinue }) {
   resultTitleEl.textContent = title;
   resultTextEl.textContent = text;
@@ -820,6 +1041,10 @@ function showResult({ title, text, final, winner, buttonLabel, onContinue }) {
   };
   resultEl.hidden = false;
   resultButtonEl.focus();
+  if (final) {
+    playWinnerSound();
+    throwConfetti();
+  }
 }
 
 function hideResult() {
@@ -850,11 +1075,11 @@ function endRound(bombOpener) {
 
   let what;
   if (bombOpener === null) {
-    what = 'Only the bomb was left, so both players get a point.';
+    what = 'Only the ' + hazard() + ' was left, so both players get a point.';
   } else if (round === SUDDEN_DEATH) {
-    what = playerName(bombOpener) + ' opened the bomb!';
+    what = playerName(bombOpener) + ' ' + openedHazard() + '!';
   } else {
-    what = playerName(bombOpener) + ' opened the bomb, so ' + playerName(1 - bombOpener) + ' gets a point.';
+    what = playerName(bombOpener) + ' ' + openedHazard() + ', so ' + playerName(1 - bombOpener) + ' gets a point.';
   }
   const finalScore = 'Final score ' + scores[0] + ' – ' + scores[1] + '.';
 
@@ -875,15 +1100,17 @@ function endRound(bombOpener) {
     result = { title: playerName(winner) + ' wins the game!', text: what + ' ' + finalScore, final: true, winner, buttonLabel: 'Play again', onContinue: showHome };
   }
 
-  // after a bomb, wait for the jump scare to finish first
+  // after a bomb, wait for the jump scare (or splat) to finish first
+  const bombMs = kidsMode ? SPLAT_MS : SCARE_MS;
   clearTimeout(resultTimer);
-  resultTimer = setTimeout(() => showResult(result), bombOpener === null ? RESULT_DELAY_MS : SCARE_MS + 200);
+  resultTimer = setTimeout(() => showResult(result), bombOpener === null ? RESULT_DELAY_MS : bombMs + 200);
 }
 
 function trackFinish(winner) {
   gameInProgress = false;
   track('game-finish', {
     mode: vsBot ? 'bot' : 'friend',
+    style: kidsMode ? 'kids' : 'scary',
     winner: vsBot ? (winner === 0 ? 'player' : 'bot') : chosen[winner].name,
     suddenDeath: round === SUDDEN_DEATH,
     diamonds: prizes[0].concat(prizes[1]).filter(prize => prize.rare).length,
@@ -909,11 +1136,16 @@ function openPresent(button, index) {
   openedCount++;
 
   if (index === bombIndex) {
-    revealPresent(button, '💣');
-    playJumpScare();
+    if (kidsMode) {
+      revealPresent(button, '⛄');
+      playSplat();
+    } else {
+      revealPresent(button, '💣');
+      playJumpScare();
+    }
     const other = 1 - currentPlayer;
     if (round !== SUDDEN_DEATH) scores[other]++;
-    messageEl.textContent = 'BOMB!' + (round === SUDDEN_DEATH ? '' : ' ' + playerName(other) + ' gets a point.');
+    messageEl.textContent = (kidsMode ? 'SPLAT! A snowball!' : 'BOMB!') + (round === SUDDEN_DEATH ? '' : ' ' + playerName(other) + ' gets a point.');
     endRound(currentPlayer);
     return;
   }
@@ -922,12 +1154,19 @@ function openPresent(button, index) {
   prizes[currentPlayer].push(prize);
   roundPrizes[currentPlayer].push(prize);
   revealPresent(button, prize.emoji, prize.rare, !prize.rare);
-  if (prize.rare) track('diamond', { character: chosen[currentPlayer].name, bot: vsBot && currentPlayer === 1 });
+  if (prize.rare) {
+    playDiamondSound();
+    track('diamond', { character: chosen[currentPlayer].name, bot: vsBot && currentPlayer === 1 });
+  } else {
+    playPrizeSound();
+  }
   button.setAttribute('aria-label', prize.name);
+  const isNew = !(vsBot && currentPlayer === 1) && addToCollection(prize); // the bot's finds don't count
 
   let text = prize.rare
     ? 'WOW! ' + playerName(currentPlayer) + ' found ' + prize.found + ' ' + prize.emoji + '!'
     : 'Safe! ' + playerName(currentPlayer) + ' found ' + prize.found + ' ' + prize.emoji + '.';
+  if (isNew) text += ' New in your collection!';
   if (Math.random() < JOKE_CHANCE && jokesLeft.length > 0) {
     text += ' ' + jokesLeft.pop();
   }
@@ -1016,6 +1255,7 @@ function showMode() {
   clearTimeout(botTimer);
   clearTimeout(wheelTimer);
   hideResult();
+  hideCollection();
   gameEl.hidden = true;
   wheelScreenEl.hidden = true;
   selectEl.hidden = true;
@@ -1027,7 +1267,7 @@ function chooseMode(withBot) {
   vsBot = withBot;
   prepareAudio(); // a click is needed before a browser lets the scare sound play
   document.getElementById('mode').hidden = true;
-  if (warningSeen) {
+  if (warningSeen || kidsMode) {
     startGame();
   } else {
     document.getElementById('warning').hidden = false;
@@ -1046,12 +1286,14 @@ function showHome() {
   document.getElementById('mode').hidden = true;
   document.getElementById('warning').hidden = true;
   homeButtonEl.hidden = true;
+  updateCollectionCount();
   document.getElementById('home').hidden = false;
 }
 homeButtonEl.onclick = showHome;
 
 document.getElementById('play').onclick = () => {
   prepareAudio(); // a click is needed before a browser lets any sound play
+  hideCollection();
   document.getElementById('home').hidden = true;
   homeButtonEl.hidden = false;
   showMode();

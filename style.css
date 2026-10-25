@@ -140,6 +140,59 @@ body {
   font-size: 1.3rem;
 }
 
+/* Scary / Kids switch and the collection link on the home screen */
+#styleToggle {
+  display: inline-flex;
+  margin-top: 14px;
+  border: 1px solid rgba(255, 207, 110, 0.5);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+#styleToggle button {
+  padding: 6px 16px;
+  font: inherit;
+  font-size: 0.95rem;
+  color: #ffcf6e;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+#styleToggle button[aria-pressed="true"] {
+  color: #151a2a;
+  background: #ffcf6e;
+  font-weight: bold;
+}
+
+#styleToggle button:focus-visible,
+#collectionButton:focus-visible,
+#collectionClose:focus-visible {
+  outline: 3px solid #ffcf6e;
+  outline-offset: 2px;
+}
+
+#styleHint {
+  min-height: 2.6em;
+  margin: 6px auto 0;
+  max-width: 300px;
+  font-size: 0.8rem;
+  color: #8f98b3;
+}
+
+#collectionButton {
+  margin-top: 4px;
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 0.95rem;
+  color: #b9c2e0;
+  background: none;
+  border: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
 .feedback {
   display: inline-block;
   margin-top: 12px;
@@ -472,6 +525,8 @@ body {
   #scare::after,
   #result,
   #resultCard,
+  #collection,
+  #splatBurst,
   .present .inside {
     animation: none;
   }
@@ -615,6 +670,169 @@ body {
 
 @keyframes resultPop {
   from { transform: scale(0.85); opacity: 0; }
+}
+
+/* prize collection book: found prizes in colour, missing ones as "?" */
+#collection {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 12px 12px;
+  box-sizing: border-box;
+  background: rgba(8, 10, 20, 0.7);
+  animation: resultFade 0.25s ease-out;
+}
+
+#collection[hidden] {
+  display: none;
+}
+
+#collectionCard {
+  width: min(100%, 520px);
+  max-height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 20px 16px 18px;
+  text-align: center;
+  background: #1f2640;
+  border: 2px solid #ffcf6e;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+#collectionTitle {
+  margin: 0 0 4px;
+  color: #ffcf6e;
+  font-size: 1.6rem;
+}
+
+#collectionText {
+  margin: 0 0 14px;
+}
+
+#collectionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 8px;
+}
+
+.collectionTile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 4px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  color: #6f7894;
+}
+
+.collectionTile.found {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 207, 110, 0.35);
+  color: #fff;
+}
+
+.collectionTile.rare {
+  background: rgba(120, 200, 255, 0.18);
+  border-color: rgba(120, 200, 255, 0.8);
+  box-shadow: 0 0 12px rgba(120, 200, 255, 0.5);
+}
+
+.collectionEmoji {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+.collectionName {
+  font-size: 0.78rem;
+}
+
+.collectionTimes {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 0.72rem;
+  color: #ffcf6e;
+}
+
+#collectionNote {
+  margin: 12px 0;
+  font-size: 0.8rem;
+  color: #8f98b3;
+}
+
+#collectionClose {
+  padding: 8px 24px;
+  font: inherit;
+  color: #fff;
+  background: #b3202a;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* kids mode: a friendly snowball splat instead of the jump scare */
+#splat {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(214, 236, 255, 0.95);
+}
+
+#splat[hidden] {
+  display: none;
+}
+
+#splatBurst {
+  text-align: center;
+  font-size: min(40vw, 40vh);
+  line-height: 1;
+  animation: splatIn 0.4s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+
+#splatBurst span {
+  display: block;
+  margin-top: 8px;
+  font-size: clamp(2.5rem, 12vw, 6rem);
+  font-weight: bold;
+  color: #1d5fa8;
+}
+
+@keyframes splatIn {
+  from { transform: scale(0.2) rotate(-20deg); opacity: 0; }
+}
+
+/* confetti over the winner pop-up */
+#confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 11;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#confetti span {
+  position: absolute;
+  top: -16px;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  animation-name: confettiFall;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes confettiFall {
+  to { transform: translate(var(--drift), 105vh) rotate(var(--spin)); }
 }
 
 #presents {

@@ -303,3 +303,22 @@ PRIZES BACK, NOW THEY FADE (2026-10-25)
   bomb (💣) stays too.
 - With reduced motion turned on, the prize disappears without fading.
 - The result pop-ups still list everyone's prizes.
+
+KIDS MODE, SOUNDS AND PRIZE COLLECTION (2026-10-26)
+---------------------------------------------------
+- Home screen switch: 👻 Scary / 🧸 Kids, remembered in the browser
+  (localStorage "santasSurprise.kidsMode"). A line under it says what it means.
+- Kids mode: no warning screen, no ghoul pictures, no flashing or shaking. The
+  bomb becomes a snowball: a light blue full-screen "⛄ SPLAT!" for SPLAT_MS
+  (1.6 s) with a cartoon boing, and ⛄ on the board. Texts say "snowball".
+- Sound effects (made in code, follow the 🔊 button like the music): a two-note
+  chime for a prize, a sparkly run for a diamond, a fanfare for the winner.
+- Confetti falls over the winner pop-up (not with reduced motion).
+- Prize collection (📖 on the home screen, with "found/total"): every prize a
+  person finds on this device (not the bot's). Found prizes in colour with ×count,
+  missing ones as "?" (the diamond says "Very rare"). Saved in localStorage
+  "santasSurprise.collection". The first time a prize is found the message adds
+  "New in your collection!".
+- Stats: game-start and game-finish have style (kids/scary); new event
+  collection-open {found}.
+- 3-4 player mode was planned but dropped (Dylan: not now).
