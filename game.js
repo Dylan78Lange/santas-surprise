@@ -731,7 +731,7 @@ function endRound(bombOpener) {
     gameOver = true;
     const winner = 1 - bombOpener;
     messageEl.textContent += ' ' + playerName(winner) + ' wins!';
-    showAction('Play again', showMode);
+    showAction('Play again', showHome);
   } else if (round < NORMAL_ROUNDS - 1) {
     showAction('Next round', () => startRound(round + 1));
   } else if (scores[0] === scores[1]) {
@@ -741,7 +741,7 @@ function endRound(bombOpener) {
     gameOver = true;
     const winner = scores[0] > scores[1] ? 0 : 1;
     messageEl.textContent += ' ' + playerName(winner) + ' wins the game!';
-    showAction('Play again', showMode);
+    showAction('Play again', showHome);
   }
 }
 
@@ -864,9 +864,22 @@ function chooseMode(withBot) {
   }
 }
 
+const homeButtonEl = document.getElementById('homeButton');
+
+// back to the very first screen, from anywhere
+function showHome() {
+  showMode();
+  document.getElementById('mode').hidden = true;
+  document.getElementById('warning').hidden = true;
+  homeButtonEl.hidden = true;
+  document.getElementById('home').hidden = false;
+}
+homeButtonEl.onclick = showHome;
+
 document.getElementById('play').onclick = () => {
   prepareAudio(); // a click is needed before a browser lets any sound play
   document.getElementById('home').hidden = true;
+  homeButtonEl.hidden = false;
   showMode();
 };
 document.getElementById('playFriend').onclick = () => chooseMode(false);

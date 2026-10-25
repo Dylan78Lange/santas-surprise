@@ -353,6 +353,7 @@ body {
   font-size: 1.1rem;
 }
 
+#homeButton,
 #mute {
   position: fixed;
   top: 8px;
@@ -367,6 +368,15 @@ body {
   border: none;
   border-radius: 50%;
   cursor: pointer;
+}
+
+#homeButton {
+  right: auto;
+  left: 8px;
+}
+
+#homeButton[hidden] {
+  display: none;
 }
 
 @media (max-width: 700px) {
