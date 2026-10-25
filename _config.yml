@@ -1,4 +1,5 @@
 # GitHub Pages settings. These files stay in the repo but are not put on the website.
 exclude:
   - NOTES.txt
+  - README.md
   - "*.zip"
