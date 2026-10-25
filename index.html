@@ -3,8 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; media-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
   <title>Santa's Surprise</title>
-  <link rel="stylesheet" href="style.css?v=20261025a">
+  <link rel="stylesheet" href="style.css?v=20261025b">
 </head>
 <body>
   <div id="home">
@@ -18,6 +20,8 @@
       Vinyl crackle sounds by <a href="https://freesound.org/people/lulyc/" target="_blank" rel="noopener">lulyc</a>
       (<a href="https://freesound.org/people/lulyc/packs/19233/" target="_blank" rel="noopener">Freesound</a>),
       <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">CC BY 3.0</a>. Converted to MP3.
+      Jump scare sounds from <a href="https://pixabay.com/sound-effects/search/jumpscare/" target="_blank" rel="noopener">Pixabay</a>.
+      The Grinch and Rudolph belong to their owners; this is an unofficial fan game.
     </p>
   </div>
   <div id="mode" hidden>
@@ -67,6 +71,6 @@
   <button id="homeButton" aria-label="Go to the home screen" hidden>&#127968;</button>
   <button id="mute" aria-label="Turn music off">&#128266;</button>
   <div id="scare" hidden><img id="scareImg" alt=""></div>
-  <script src="game.js?v=20261025a"></script>
+  <script src="game.js?v=20261025b"></script>
 </body>
 </html>

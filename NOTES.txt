@@ -245,3 +245,15 @@ plays it every round). Fix for players: Cmd+Shift+R. Fix built in: index.html lo
 style.css?v=... and game.js?v=...; CHANGE THE v= VERSION IN index.html WHENEVER
 game.js OR style.css CHANGES, so a normal reload picks up the new files.
 Current version: 20261024b
+
+GA READINESS FIXES (2026-10-25)
+-------------------------------
+- Scare flash slowed to 1 a second (was about 3), shake made smaller and slower.
+  If the device asks for reduced motion, there is no flash, shake or floating.
+- index.html has a Content-Security-Policy meta tag: only the game's own files
+  can load. A no-referrer meta tag too.
+- Pictures shrunk: characters and presents 768px, scare pictures 1600px wide.
+  All pictures together went from about 30 MB to about 2 MB.
+- _config.yml keeps NOTES.txt and zips off the website (still in the repo).
+- CREDITS.txt now credits the Pixabay jump scare sounds, notes the Grinch and
+  Rudolph trademarks, and says what the Apache-2.0 license covers.

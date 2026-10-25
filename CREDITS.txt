@@ -24,3 +24,28 @@ The carols (Jingle Bells, We Wish You a Merry Christmas, Joy to the World,
 Hark! The Herald Angels Sing and O Tannenbaum) are traditional tunes that are in
 the public domain. They are played by the game itself with a bell sound made in
 the browser.
+
+Jump scare sounds
+-----------------
+jumpsound01.mp3 to jumpsound05.mp3 are jump scare sound effects from Pixabay:
+
+  Source:  https://pixabay.com/sound-effects/search/jumpscare/
+  License: Pixabay Content License  https://pixabay.com/service/license-summary/
+
+They are used inside the game only. They are not covered by this project's
+Apache-2.0 license and may not be sold or shared on their own.
+
+Pictures
+--------
+The character, present and scare pictures were made with an AI image tool
+(Google). Santa Claus, elves, snowmen and gingerbread men are traditional
+figures. The Grinch is a trademark of Dr. Seuss Enterprises, and Rudolph the
+Red-Nosed Reindeer is a trademark of The Rudolph Company. This is a fan game, not
+made by or connected with either of them, and those two pictures are not covered
+by this project's Apache-2.0 license.
+
+What the Apache-2.0 license covers
+----------------------------------
+The license in LICENSE covers the game's own code (index.html, game.js,
+style.css) and the pictures not named above. The sounds and pictures named above
+keep their own licenses or owners.
