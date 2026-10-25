@@ -103,6 +103,19 @@ body {
   color: #b9c2e0;
 }
 
+#homeFeedback {
+  display: inline-block;
+  margin-bottom: 4px;
+  font-size: 0.8rem;
+  color: #ffcf6e;
+  text-decoration: none;
+}
+
+#homeFeedback:hover,
+#homeFeedback:focus-visible {
+  text-decoration: underline;
+}
+
 #homeButtons, #modeButtons {
   display: flex;
   justify-content: center;
